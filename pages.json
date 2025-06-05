@@ -1,0 +1,21 @@
+{
+  "easycom": {
+    "^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
+  },
+  "pages": [
+    {
+      "path": "pages/home/index",
+      "style": {
+        "navigationBarTitleText": "",
+        "enablePullDownRefresh": false
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "NFC",
+    "navigationBarBackgroundColor": "#0086D1",
+    "backgroundColor": "#fff",
+    "navigationStyle": "custom"
+  }
+}

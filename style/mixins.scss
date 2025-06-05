@@ -1,0 +1,34 @@
+// 渐变
+// 线性渐变多层
+// $linearGradient - 渐变参数
+@mixin linear-gradient-multiple($linearGradient...) {
+  background: -webkit-linear-gradient($linearGradient); // Safari 5.1 - 6.0
+  background: -o-linear-gradient($linearGradient); //Opera 11.1 - 12.0
+  background: -moz-linear-gradient($linearGradient); // Firefox 3.6 - 15
+  background: linear-gradient($linearGradient); //标准的语法
+}
+
+// 线性渐变
+// $colorStop1 - 过渡色1
+// $colorStop2 - 过渡色2
+// $angle - 方向
+@mixin linear-gradient($colorStop1,$colorStop2,$angle:to bottom) {
+  @include linear-gradient-multiple($angle, $colorStop1, $colorStop2);
+}
+
+// 阴影
+// $h - 水平移值
+// $v - 垂直移值
+// $vage - 阴影模糊值
+// $extende - 阴影外延值
+// $color - 颜色
+@mixin box-shadow($h,$v,$vage,$extende,$color) {
+  -webkit-box-shadow: $h $v $vage $extende $color;
+  -o-box-shadow: $h $v $vage $extende $color;
+  -moz-box-shadow: $h $v $vage $extende $color;
+  box-shadow: $h $v $vage $extende $color;
+}
+
+@mixin color-primary-light($color1, $color2, $percentage) {
+  color: mix($color1,$color2, $percentage)
+}

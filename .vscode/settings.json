@@ -1,0 +1,45 @@
+{
+  "editor.semanticTokenColorCustomizations": null,
+  // 重新设定tabsize
+  "editor.tabSize": 2,
+  // #每次保存的时候自动格式化
+  "editor.formatOnSave": true,
+  // #每次保存的时候将代码按eslint格式进行修复
+  "workbench.startupEditor": "none",
+  "workbench.editor.splitInGroupLayout": "vertical",
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "editor.inlineSuggest.enabled": true,
+  "editor.largeFileOptimizations": false,
+  "editor.wordWrap": "off", // 编辑器中的代码自适应显示
+  "editor.detectIndentation": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "editor.fontLigatures": false,
+  "security.workspace.trust.untrustedFiles": "open",
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[vue]": {
+    "editor.defaultFormatter": "Vue.volar"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "prettier.semi": false,
+  "prettier.singleQuote": true,
+  "prettier.bracketSameLine": false,
+  "prettier.trailingComma": "es5",
+  "prettier.singleAttributePerLine": true,
+  "html.format.wrapAttributes": "force-expand-multiline",
+  "typescript.format.insertSpaceAfterSemicolonInForStatements": false,
+  "typescript.format.insertSpaceBeforeFunctionParenthesis": true,
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "volar.inlayHints.eventArgumentInInlineHandlers": false,
+  "[scss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
