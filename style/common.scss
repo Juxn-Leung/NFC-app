@@ -66,14 +66,14 @@ u-button {
   width: 100%;
 }
 
-.format-btn-border {
-  /deep/ .u-hairline-border::after {
-    left: 2rpx !important;
-    top: 2rpx !important;
-    width: 198.8% !important;
-    height: 194.7% !important;
-  }
-}
+// .format-btn-border {
+//   /deep/ .u-hairline-border::after {
+//     left: 2rpx !important;
+//     top: 2rpx !important;
+//     width: 198.8% !important;
+//     height: 194.7% !important;
+//   }
+// }
 
 .font-weight-500 {
   -webkit-text-stroke: 0.4px;

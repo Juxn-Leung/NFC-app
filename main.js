@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import App from './App'
 import uView from 'uview-ui';
-import { apis } from '@/common/api/apis.js'
 import { tipsUtils } from '@/utils/tips.js'
 import { jumpUtils } from '@/utils/jump.js'
 import { utils } from '@/utils/util.js'
@@ -9,7 +8,6 @@ import store from '@/store'
 import NavBar from "@/components/NavBar";
 
 Vue.prototype.$store = store
-Vue.prototype.$apis = apis
 Vue.prototype.$jumpUtils = jumpUtils
 Vue.prototype.$tipsUtils = tipsUtils
 Vue.prototype.$utils = utils

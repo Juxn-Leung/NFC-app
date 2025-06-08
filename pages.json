@@ -4,9 +4,9 @@
   },
   "pages": [
     {
-      "path": "pages/home/index",
+      "path": "pages/home/home",
       "style": {
-        "navigationBarTitleText": "",
+        "navigationBarTitleText": "NFC读卡",
         "enablePullDownRefresh": false
       }
     }

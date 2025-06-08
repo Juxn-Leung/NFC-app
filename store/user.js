@@ -1,11 +1,9 @@
-import { apis } from '@/common/api/apis.js'
-
 const user = {
   namespaced: true,
   state: {
     token: uni.getStorageSync('token') || null,
-    userInfo: uni.getStorageSync('userInfo') || {frisUser:{name:''}},
-    userOrganization:uni.getStorageSync('userOrganization') || {},
+    userInfo: uni.getStorageSync('userInfo') || { frisUser: { name: '' } },
+    userOrganization: uni.getStorageSync('userOrganization') || {},
     agreement: uni.getStorageSync('agreement') || false,
     userOrganization: uni.getStorageSync('userOrganization') || {},
   },
