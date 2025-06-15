@@ -8,23 +8,20 @@
         {{ nfcMessage }}
       </view>
 
-      <view v-html="messages"></view>
+      <view
+        class="container"
+        v-html="messages"
+      ></view>
 
-      <u-button
-        type="primary"
-        @click="nfcINfo"
-      >刷新</u-button>
+      <view class="container-shadow"></view>
 
-      <u-button
-        type="primary"
-        @click="() => {
-          showEdit = true;
-        }"
-      >
-        <u-icon name="edit-pen"></u-icon>
-      </u-button>
       <view class="btn-content">
-        <button class="btn">
+        <button
+          class="btn"
+          @click="() => {
+            showEdit = true;
+          }"
+        >
           <svg
             height="24"
             width="24"
@@ -87,7 +84,8 @@ export default {
 
       nfcId: '2222',
       nfcMessage: '没有NFC标签',
-      messages: '<p>1111</p><p>2222</p><p><span style="color: rgb(19, 61, 212);">无敌五毒没看到比较阿胶不睡觉觉</span></p><p><span style="color: rgb(19, 61, 212);"><span class="ql-cursor">﻿</span></span></p>',
+      messages: '',
+      // messages: '<p>1111</p><p>2222</p><p><span style="color: rgb(19, 61, 212);">无敌五毒没看到比较阿胶不睡觉觉</span></p><p><span style="color: rgb(19, 61, 212);"><span class="ql-cursor">﻿</span></span></p>',
       editMessages: '',
       showEdit: false,
     }
@@ -254,6 +252,32 @@ export default {
     z-index: 10;
     background: transparent;
     position: relative;
+
+    .container {
+      height: 66%;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+      top: 45%;
+      transform: translateY(-50%);
+      position: absolute;
+      z-index: 1;
+    }
+
+    .container-shadow {
+      position: absolute;
+      width: calc(100% - 32px);
+      height: 66%;
+      top: calc(45% + 16px);
+      left: 16px;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 16px;
+      z-index: -1;
+    }
   }
 }
 
@@ -407,9 +431,19 @@ span {
   }
 
   .text {
-    font-weight: 600;
-    color: white;
-    font-size: medium;
+    position: relative;
+    z-index: 10;
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    color: transparent;
+    text-shadow:
+      0px 0px 1px rgba(255, 255, 255, .6),
+      0px 4px 4px rgba(0, 0, 0, .05);
+    letter-spacing: .2rem;
   }
 }
 </style>
