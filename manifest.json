@@ -126,6 +126,7 @@
                     "minified" : true
                 },
                 "usingComponents" : true,
+                "cloudfunctionRoot" : "cloudfunctions",
                 "permission" : {
                     "scope.nfc" : {
                         "desc" : "需要NFC权限读取标签"
@@ -155,7 +156,8 @@
     "mp-weixin" : {
         "appid" : "wx695ff6c8b81fc8e3",
         "setting" : {
-            "postcss" : true
+            "postcss" : true,
+            "minified" : true
         }
     }
 }

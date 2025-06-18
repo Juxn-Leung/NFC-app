@@ -2,6 +2,12 @@
 export default {
   onLaunch: function () {
     console.log('App Launch')
+    if (wx.cloud) {
+      wx.cloud.init({
+        env: "cloud1-9g9zjuj0caed4611", // 替换为你的云环境ID
+        traceUser: true,    // 记录用户访问
+      });
+    }
   },
   onShow: function () {
     console.log('App Show')
@@ -17,5 +23,4 @@ export default {
 @import "@/static/iconfont/iconfont.css";
 // page {
 //   background-color: #f0f2f5;
-// }
-</style>
+// }</style>
