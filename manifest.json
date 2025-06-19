@@ -121,6 +121,7 @@
             /* 小程序特有相关 */
             "mp-weixin" : {
                 "appid" : "wxacef4dc28273d64f",
+                "cloudfunctionRoot" : "./functions/",
                 "setting" : {
                     "urlCheck" : true,
                     "minified" : true

@@ -1,6 +1,15 @@
-//vue.config.js里面添加如下配置
+const path = require('path')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+
 module.exports = {
-    transpileDependencies: [
-        /[/\\]node_modules[/\\](.+?)?@uni-ui(.*)[/\\]code-plugs/
-    ],
+  configureWebpack: {
+    plugins: [
+      new CopyWebpackPlugin([
+        {
+          from: path.join(__dirname, 'functions'),
+          to: path.join(__dirname, 'unpackage', process.env.NODE_ENV === 'production' ? 'build' : 'dev', process.env.UNI_PLATFORM, 'functions')
+        }
+      ])
+    ]
+  }
 }
