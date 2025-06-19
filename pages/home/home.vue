@@ -96,9 +96,38 @@ export default {
   watch: {},
   computed: {},
   onLoad() {
+    const openid = uni.getStorageSync('openid')
+    if (!openid) {
+      this.getOpenId()
+    } else {
+      this.openid = openid
+    }
     this.nfcINfo()
   },
   methods: {
+    async getOpenId() {
+      try {
+        uni.showLoading({ title: "获取中..." });
+
+        // 调用云函数
+        const res = await wx.cloud.callFunction({
+          name: "getOpenId", // 云函数名称
+          data: {} // 无需传递参数
+        });
+
+        this.openid = res.result.openid;
+        console.log("获取成功:", res.result);
+
+      } catch (err) {
+        console.error("云函数调用失败:", err);
+        uni.showToast({
+          title: "获取失败",
+          icon: "none"
+        });
+      } finally {
+        uni.hideLoading();
+      }
+    },
     nfcINfo() {
       // 获取NFC实例
       this.nfc = wx.getNFCAdapter()

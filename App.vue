@@ -15,14 +15,13 @@ export default {
     },
   },
   onLaunch: function () {
-    // 初始化云开发环境
-    wx.cloud.init({
-      env: "你的云环境ID", // 替换为实际环境ID（在微信云控制台获取）
-      traceUser: true, // 追踪用户（静默获取 openid 必需）
-    });
-    const openid = uni.getStorageSync("openid");
-    // 调用云函数获取 openid
-    if (!openid) this.getUserOpenId();
+    console.log('App Launch')
+    if (wx.cloud) {
+      wx.cloud.init({
+        env: "cloud1-9g9zjuj0caed4611", // 替换为你的云环境ID
+        traceUser: true,    // 记录用户访问
+      });
+    }
   },
   onShow: function () {
     console.log('App Show')
