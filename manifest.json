@@ -121,13 +121,12 @@
             /* 小程序特有相关 */
             "mp-weixin" : {
                 "appid" : "wxacef4dc28273d64f",
-                "cloudfunctionRoot" : "./functions/",
+                "cloudfunctionRoot" : "./cloudfunctionTemplate/",
                 "setting" : {
                     "urlCheck" : true,
                     "minified" : true
                 },
                 "usingComponents" : true,
-                "cloudfunctionRoot" : "cloudfunctions",
                 "permission" : {
                     "scope.nfc" : {
                         "desc" : "需要NFC权限读取标签"
