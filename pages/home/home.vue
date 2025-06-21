@@ -5,16 +5,6 @@
         {{ nfcMessage }}
       </view>
 
-      <!-- <view
-        class="container"
-        v-html="messages"
-      ></view> -->
-
-      <!-- <view class="container-shadow"></view> -->
-
-      <view class="wrap">
-        <u-swiper :list="list"></u-swiper>
-      </view>
 
       <view class="btn-content">
         <button
@@ -95,10 +85,6 @@ import EditorContent from "@/components/Editor/index.vue";
 export default {
   data() {
     return {
-      openid: '',
-      messagesId: '', // 消息 ID
-      backgroundId: '', // 背景 ID
-      musicId: '', // 音乐 ID
       // NFC 实例
       nfc: null,
       ndef: null,
@@ -134,40 +120,9 @@ export default {
   watch: {},
   computed: {},
   onLoad() {
-    const openid = uni.getStorageSync('openid')
-    if (!openid) {
-      this.getOpenId()
-    } else {
-      this.openid = openid
-      this.messagesId = this.openid + '1';
-      this.backgroundId = this.openid + '2';
-      this.musicId = this.openid + '3';
-    }
     this.nfcINfo()
   },
   methods: {
-    async getOpenId() {
-      try {
-        // 调用云函数
-        const res = await wx.cloud.callFunction({
-          name: "getOpenId", // 云函数名称
-          data: {} // 无需传递参数
-        });
-
-        const openid = res.result.openid;
-        this.openid = openid;
-        this.messagesId = this.openid + '1';
-        this.backgroundId = this.openid + '2';
-        this.musicId = this.openid + '3';
-        uni.setStorageSync('openid', openid);
-      } catch (err) {
-        console.error("云函数调用失败:", err);
-        uni.showToast({
-          title: "获取失败",
-          icon: "none"
-        });
-      }
-    },
     nfcINfo() {
       // 获取NFC实例
       this.nfc = wx.getNFCAdapter()
@@ -189,13 +144,13 @@ export default {
                 console.log(`记录 ${recIndex + 1}:`, parsedRecord);
 
                 // 在界面上显示 id 为 content 的记录内容
-                if (parsedRecord.id === this.messagesId) {
+                if (parsedRecord.id === 'message') {
                   this.messages = parsedRecord.payload;
                   this.editMessages = parsedRecord.payload; // 设置编辑内容
                   if (!this.showEdit) return this.showView = true; // 如果没有编辑界面则显示查看界面
                 }
                 // 如果记录类型是背景颜色，则设置背景颜色
-                if (parsedRecord.id === this.backgroundId) {
+                if (parsedRecord.id === 'background') {
                   this.background = parsedRecord.payload;
                 }
 
@@ -279,48 +234,18 @@ export default {
           payload: str2ab('com.tencent.mm')
         },
         {
-          id: str2ab(this.messagesId), // 读写内容
+          id: str2ab('message'), // 读写内容
           tnf: 1,
           type: str2ab('T'),
           payload: str2ab(this.editMessages)
         },
         {
-          id: str2ab(this.backgroundId), // 读写内容
+          id: str2ab('background'), // 读写内容
           tnf: 1,
           type: str2ab('T'),
           payload: str2ab(this.editBackground)
         },
-        {
-          id: str2ab(this.musicId), // 读写内容
-          tnf: 1,
-          type: str2ab('T'),
-          payload: str2ab(this.editMusic)
-        },
-        {
-          id: str2ab('test1'), // 读写内容
-          tnf: 1,
-          type: str2ab('T'),
-          payload: str2ab('11')
-        },
-        // {
-        //   id: str2ab('test2'), // 读写内容
-        //   tnf: 1,
-        //   type: str2ab('T'),
-        //   payload: str2ab('22')
-        // },
       ]
-
-      // const otherMessages = this.messagesList.filter((item) => item.id !== 'mini-ios' && item.id !== 'mini-android' && item.id !== this.messagesId && item.id !== this.backgroundId);
-      // if (otherMessages.length) {
-      //   otherMessages.forEach((item) => {
-      //     records.push({
-      //       id: str2ab(item.id),
-      //       tnf: str2ab(item.tnf),
-      //       type: str2ab(item.type),
-      //       payload: str2ab(item.payload)
-      //     });
-      //   });
-      // }
 
       console.log('要写入的 NDEF 消息:', records);
 
@@ -368,32 +293,6 @@ export default {
     z-index: 10;
     background: transparent;
     position: relative;
-
-    // .container {
-    //   height: 66%;
-    //   width: 100%;
-    //   background: #ffffff;
-    //   border-radius: 20px;
-    //   padding: 16px;
-    //   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    //   overflow-y: auto;
-    //   top: 45%;
-    //   transform: translateY(-50%);
-    //   position: absolute;
-    //   z-index: 1;
-    // }
-
-    // .container-shadow {
-    //   position: absolute;
-    //   width: calc(100% - 32px);
-    //   height: 66%;
-    //   top: calc(45% + 16px);
-    //   left: 16px;
-    //   transform: translateY(-50%);
-    //   background: rgba(255, 255, 255, 0.5);
-    //   border-radius: 16px;
-    //   z-index: -1;
-    // }
   }
 }
 
@@ -557,7 +456,7 @@ span {
     font-size: 18px;
     color: transparent;
     text-shadow:
-      0px 0px 1px rgba(255, 255, 255, .6),
+      0px 0px 1px rgba(255, 255, 255, 1),
       0px 4px 4px rgba(0, 0, 0, .05);
     letter-spacing: .2rem;
   }
