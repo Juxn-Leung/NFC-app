@@ -81,7 +81,7 @@
         data-name="letterSpacing"
         data-value="2em"
       ></i>
-      <i
+      <!-- <i
         :class="'iconfont icon-722bianjiqi_duanqianju ' + (formats.marginTop ? 'ql-active' : '')"
         data-name="marginTop"
         data-value="20px"
@@ -94,7 +94,7 @@
       <i
         class="iconfont icon-clearedformat"
         @tap="removeFormat"
-      ></i>
+      ></i> -->
       <i
         :class="'iconfont icon-font ' + (formats.fontFamily ? 'ql-active' : '')"
         data-name="fontFamily"
@@ -119,7 +119,6 @@
         :data-value="fontBg"
         @tap="open2"
       ></i>
-      <!-- 引用黄河浪的color取色器 -->
       <i
         class="iconfont icon-date"
         @tap="insertDate"
@@ -136,22 +135,22 @@
         :class="'iconfont icon-zitixiahuaxian ' + (formats.underline ? 'ql-active' : '')"
         data-name="underline"
       ></i>
-      <i
+      <!-- <i
         class="iconfont icon--checklist"
         data-name="list"
         data-value="check"
-      ></i>
+      ></i> -->
       <i
         :class="'iconfont icon-youxupailie ' + (formats.list === 'ordered' ? 'ql-active' : '')"
         data-name="list"
         data-value="ordered"
       ></i>
-      <i
+      <!-- <i
         :class="'iconfont icon-wuxupailie ' + (formats.list === 'bullet' ? 'ql-active' : '')"
         data-name="list"
         data-value="bullet"
-      ></i>
-      <i
+      ></i> -->
+      <!-- <i
         class="iconfont icon-outdent"
         data-name="indent"
         data-value="-1"
@@ -164,8 +163,8 @@
       <i
         class="iconfont icon-fengexian"
         @tap="insertDivider"
-      ></i>
-      <i
+      ></i> -->
+      <!-- <i
         class="iconfont icon-preview"
         @tap="store"
         id="2"
@@ -179,9 +178,9 @@
         :class="'iconfont icon-zitishangbiao ' + (formats.script === 'super' ? 'ql-active' : '')"
         data-name="script"
         data-value="super"
-      ></i>
+      ></i> -->
       <!-- <i class="iconfont icon-quanping"></i> -->
-      <i
+      <!-- <i
         class="iconfont icon-shanchu"
         @tap="clear"
       ></i>
@@ -194,7 +193,7 @@
         class="iconfont icon-baocun"
         @tap="store"
         id="1"
-      ></i>
+      ></i> -->
     </view>
 
     <view class="container">

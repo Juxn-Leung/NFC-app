@@ -1,14 +1,14 @@
 <script>
 export default {
   methods: {
-    async getUserOpenId() {
+    async getOpenId() {
       try {
-        const res = await uni.cloud.callFunction({
-          name: "getUserOpenId", // 云函数名称
+        const res = await wx.cloud.callFunction({
+          name: "getOpenId", // 云函数名称
+          data: {} // 无需传递参数
         });
         const openid = res.result.openid;
-        console.log("用户 openid:", openid);
-        uni.setStorageSync("openid", openid); // 存储到本地
+        uni.setStorageSync('openid', openid);
       } catch (err) {
         console.error("获取 openid 失败:", err);
       }
@@ -21,6 +21,12 @@ export default {
         env: "cloud1-9g9zjuj0caed4611", // 替换为你的云环境ID
         traceUser: true,    // 记录用户访问
       });
+      const openid = uni.getStorageSync('openid');
+      if (!openid) {
+        this.getOpenId()
+      } else {
+        this.openid = openid
+      }
     }
   },
   onShow: function () {
