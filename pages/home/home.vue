@@ -1,34 +1,35 @@
 <template>
   <view class="home u-flex u-flex-column u-flex-center u-padding-35">
     <view class="home-content">
-      <view>
-        {{ nfcMessage }}
+
+      <view class="container">
+        <u-image
+          width="100px"
+          height="100px"
+          src="/static/images/Ring.png"
+        ></u-image>
       </view>
 
+      <text class="container-text">将手机背面靠近戒指</text>
 
       <view class="btn-content">
-        <button
+        <view
           class="btn"
           @click="() => {
             showEdit = true;
+            editBackground = background;
+            editMessages = messages;
           }"
         >
-          <svg
-            height="24"
-            width="24"
-            fill="#FFFFFF"
-            viewBox="0 0 24 24"
-            data-name="Layer 1"
-            id="Layer_1"
-            class="sparkle"
-          >
-            <path
-              d="M10,21.236,6.755,14.745.264,11.5,6.755,8.255,10,1.764l3.245,6.491L19.736,11.5l-6.491,3.245ZM18,21l1.5,3L21,21l3-1.5L21,18l-1.5-3L18,18l-3,1.5ZM19.333,4.667,20.5,7l1.167-2.333L24,3.5,21.667,2.333,20.5,0,19.333,2.333,17,3.5Z"
-            ></path>
-          </svg>
+          <u-image
+            width="24px"
+            height="24px"
+            src="/static/images/start.png"
+            mode="aspectFill"
+          ></u-image>
 
-          <span class="text">编辑内容</span>
-        </button>
+          <text class="text">编辑内容</text>
+        </view>
       </view>
     </view>
 
@@ -38,11 +39,28 @@
       width="100%"
       height="100%"
     >
-      <view class="content u-padding-35">
+      <view class="popup-content u-padding-35">
         <scroll-view
           scroll-y="true"
-          style="height: 70%; margin-top: 20%;"
+          style="height: 80%; margin-top: 20%;"
         >
+          <view class="popup-select">
+            <view class="select-image">
+              <u-image
+                v-if="editBackground"
+                :src="getUrl"
+                width="72px"
+                height="128px"
+                mode="aspectFill"
+              ></u-image>
+              <text
+                class="select"
+                @click="() => {
+                  showBackground = true;
+                }"
+              >选择背景</text>
+            </view>
+          </view>
           <EditorContent
             :editorDetail="messages"
             @getContents="(html) => {
@@ -50,31 +68,85 @@
             }"
           ></EditorContent>
         </scroll-view>
-        <view class="confrim-btn u-flex u-row-between u-flex-column">
-          <u-button @click="() => {
-            showEdit = false;
-          }">取消</u-button>
-          <u-button
-            type="primary"
+        <view class="popup-btn">
+          <view
+            class="button orange"
+            @click="() => {
+              showEdit = false;
+            }"
+          >返回</view>
+          <view
+            class="button cyan"
+            @click="() => {
+              showView = true;
+              messages = editMessages;
+            }"
+          >预览</view>
+          <view
+            class="button pink"
             @click="onWrite"
-          >写入</u-button>
+          >写入</view>
         </view>
       </view>
     </u-popup>
 
+    <u-modal
+      title="选择背景"
+      v-model="showBackground"
+    >
+      <view class="slot-content">
+        <u-radio-group v-model="editBackground">
+          <u-radio
+            v-for="(item, index) in bgList"
+            :key="index"
+            :name="item.value"
+          >
+            <view>
+              <u-image
+                v-if="item.image"
+                :src="item.image"
+                width="54px"
+                height="96px"
+                mode="aspectFill"
+              ></u-image>
+              <text>{{ item.name }}</text>
+            </view>
+          </u-radio>
+        </u-radio-group>
+      </view>
+    </u-modal>
+
     <u-popup
       v-model="showView"
-      :closeable="true"
-      :close-icon-position="'top-left'"
       mode="right"
       width="100%"
       height="100%"
     >
-      <view class="content u-padding-35">
-        <scroll-view scroll-y="true">
+      <view class="popup-content u-padding-35">
+        <u-icon
+          class="popup-close"
+          name="close"
+          color="#2979ff"
+          size="40"
+          @click="() => {
+            showView = false;
+          }"
+        ></u-icon>
+        <scroll-view
+          scroll-y="true"
+          style="height: 80%; margin-top: 20%;padding: 10px;"
+        >
           <u-parse :html="messages"></u-parse>
         </scroll-view>
       </view>
+      <u-image
+        v-if="getUrl"
+        class="popup-background"
+        width="100%"
+        height="100%"
+        :src="getUrl"
+        mode="aspectFill"
+      ></u-image>
     </u-popup>
   </view>
 </template>
@@ -82,9 +154,15 @@
 <script>
 import { parseNdefRecord, str2ab } from "@/utils/record.js";
 import EditorContent from "@/components/Editor/index.vue";
+
 export default {
   data() {
     return {
+      BLUE: require('@/static/images/BLUE.jpg'),
+      MWE: require('@/static/images/MWE.png'),
+      PURPLE: require('@/static/images/PURPLE.jpg'),
+      SPRING: require('@/static/images/SPRING.jpg'),
+
       // NFC 实例
       nfc: null,
       ndef: null,
@@ -103,22 +181,30 @@ export default {
 
       showEdit: false,
       showView: false,
-
-      list: [
-        {
-          image: "https://cdn.uviewui.com/uview/xxx.jpg",
-        },
-        {
-          image: "https://cdn.uviewui.com/uview/xxx.jpg",
-        },
-      ],
+      showBackground: false,
     }
   },
   components: {
     EditorContent
   },
   watch: {},
-  computed: {},
+  computed: {
+    getUrl() {
+      // 根据背景类型返回对应的图片路径
+      return this.editBackground === 'MWE' ? this.MWE :
+        this.editBackground === 'BLUE' ? this.BLUE :
+          this.editBackground === 'PURPLE' ? this.PURPLE :
+            this.editBackground === 'SPRING' ? this.SPRING : '';
+    },
+    bgList() {
+      return [
+        { name: '梦幻粉', value: 'MWE', image: this.MWE },
+        { name: '星空蓝', value: 'BLUE', image: this.BLUE },
+        { name: '魅力紫', value: 'PURPLE', image: this.PURPLE },
+        { name: '春日绿', value: 'SPRING', image: this.SPRING },
+      ];
+    },
+  },
   onLoad() {
     this.nfcINfo()
   },
@@ -146,7 +232,6 @@ export default {
                 // 在界面上显示 id 为 content 的记录内容
                 if (parsedRecord.id === 'message') {
                   this.messages = parsedRecord.payload;
-                  this.editMessages = parsedRecord.payload; // 设置编辑内容
                   if (!this.showEdit) return this.showView = true; // 如果没有编辑界面则显示查看界面
                 }
                 // 如果记录类型是背景颜色，则设置背景颜色
@@ -266,6 +351,9 @@ export default {
         }
       });
     },
+    handleHold() {
+      uni.setStorageSync('storageMessage', this.editMessages);
+    },
   },
   onUnload() {
     // 停止监听 NFC 标签
@@ -351,6 +439,187 @@ span {
   letter-spacing: .2rem;
 }
 
+.container {
+  height: 30%;
+  width: 60%;
+  // background: #F1F1F1;
+  // border-radius: 20px;
+  // padding: 16px;
+  // box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  top: 35%;
+  left: 20%;
+  transform: translateY(-50%);
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container-text {
+  position: absolute;
+  top: 50%;
+  z-index: 10;
+  display: flex;
+  width: 100%;
+  text-align: center;
+  display: block;
+  font-size: 16px;
+  color: transparent;
+  text-shadow:
+    0px 0px 1px rgba(255, 255, 255, 1),
+    0px 4px 4px rgba(0, 0, 0, .05);
+  letter-spacing: .2rem;
+}
+
+.container-shadow {
+  position: absolute;
+  width: 50%;
+  height: 30%;
+  top: calc(45% + 16px);
+  left: 25%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 16px;
+  z-index: -1;
+}
+
+.popup-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.popup-content {
+  height: 100%;
+  width: 100%;
+  z-index: 2;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  .popup-select {
+    position: relative;
+    width: 100%;
+    height: 140px;
+    display: flex;
+
+    .select-image {
+      margin-right: 16px;
+      border-radius: 8px;
+      height: 128px;
+      overflow: hidden;
+      border: 2px solid #bbbbbb;
+      border-radius: 8px;
+      position: relative;
+
+      .select {
+        width: 72px;
+        height: 128px;
+        text-align: center;
+        line-height: 128px;
+        z-index: 10;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+    }
+  }
+
+  .popup-btn {
+    position: relative;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    .button {
+      color: #ecf0f1;
+      font-size: 15px;
+      cursor: pointer;
+      text-align: center;
+      line-height: 32px;
+      width: 90px;
+      height: 32px;
+      border-radius: 30px;
+      transition: all 0.1s;
+    }
+
+    .button:active {
+      position: relative;
+      top: 2px;
+    }
+
+    .button.orange {
+      background-color: #e67e22;
+      border: 1px solid #f39c12;
+      box-shadow: 0px 6px 0px #d35400;
+    }
+
+    .button.orange:active {
+      box-shadow: 0px 2px 0px #d35400;
+    }
+
+    .button.cyan {
+      background-color: #1abc9c;
+      border: 1px solid #16a085;
+      box-shadow: 0px 6px 0px #148f77;
+    }
+
+    .button.cyan:active {
+      box-shadow: 0px 2px 0px #148f77;
+    }
+
+    .button.blue {
+      background-color: #3498db;
+      border: 1px solid #2980b9;
+      box-shadow: 0px 6px 0px #2471a3;
+    }
+
+    .button.blue:active {
+      box-shadow: 0px 2px 0px #2471a3;
+    }
+
+
+    .button.purple {
+      background-color: #9b59b6;
+      border: 1px solid #8e44ad;
+      box-shadow: 0px 6px 0px #7d3c98;
+    }
+
+    .button.purple:active {
+      box-shadow: 0px 2px 0px #7d3c98;
+    }
+
+    .button.pink {
+      background-color: #e493d0;
+      border: 1px solid #dc4a89;
+      box-shadow: 0px 6px 0px #e23798;
+    }
+
+    .button.pink:active {
+      box-shadow: 0px 2px 0px #e23798;
+    }
+  }
+
+  .popup-close {
+    position: absolute;
+    top: 40px;
+    left: 20px;
+  }
+}
+
+.slot-content {
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+}
+
 @keyframes movement {
 
   0%,
@@ -421,13 +690,17 @@ span {
   position: absolute;
   bottom: 60px;
   width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .btn {
   border: none;
-  width: 150px;
+  width: 160px;
   height: 54px;
   border-radius: 30px;
+  padding: 0 16px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -447,12 +720,10 @@ span {
 
   .text {
     position: relative;
+    display: block;
     z-index: 10;
-    display: flex;
-    min-height: 100vh;
     width: 100%;
-    justify-content: center;
-    align-items: center;
+    text-align: center;
     font-size: 18px;
     color: transparent;
     text-shadow:
