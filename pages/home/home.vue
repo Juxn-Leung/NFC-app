@@ -158,6 +158,9 @@ import EditorContent from "@/components/Editor/index.vue";
 export default {
   data() {
     return {
+      WHITE: require('@/static/images/WHITE.jpg'),
+      JIM: require('@/static/images/JIM.jpg'),
+      SILVER: require('@/static/images/SILVER.jpg'),
       BLUE: require('@/static/images/BLUE.jpg'),
       MWE: require('@/static/images/MWE.png'),
       PURPLE: require('@/static/images/PURPLE.jpg'),
@@ -193,11 +196,17 @@ export default {
       // 根据背景类型返回对应的图片路径
       return this.editBackground === 'MWE' ? this.MWE :
         this.editBackground === 'BLUE' ? this.BLUE :
-          this.editBackground === 'PURPLE' ? this.PURPLE :
-            this.editBackground === 'SPRING' ? this.SPRING : '';
+        this.editBackground === 'PURPLE' ? this.PURPLE :
+        this.editBackground === 'SPRING' ? this.SPRING :
+        this.editBackground === 'WHITE' ? this.WHITE :
+        this.editBackground === 'JIM' ? this.JIM :
+        this.editBackground === 'SILVER' ? this.SILVER : '';
     },
     bgList() {
       return [
+        { name: '白', value: 'WHITE', image: this.WHITE },
+        { name: '银', value: 'SILVER', image: this.SILVER },
+        { name: '金', value: 'JIM', image: this.JIM },
         { name: '梦幻粉', value: 'MWE', image: this.MWE },
         { name: '星空蓝', value: 'BLUE', image: this.BLUE },
         { name: '魅力紫', value: 'PURPLE', image: this.PURPLE },
