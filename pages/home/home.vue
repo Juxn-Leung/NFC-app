@@ -1,7 +1,11 @@
 <template>
   <view class="home u-flex u-flex-column u-flex-center u-padding-35">
-    <view class="home-content">
+    <NavBar
+      :backState="2000"
+      bgColor="transparent"
+    ></NavBar>
 
+    <view class="home-content">
       <view class="container">
         <u-image
           width="100px"
@@ -15,11 +19,13 @@
       <view class="btn-content">
         <view
           class="btn"
-          @click="() => {
-            showEdit = true;
-            editBackground = background;
-            editMessages = messages;
-          }"
+          @click="
+            () => {
+              showEdit = true
+              editBackground = background
+              editMessages = messages
+            }
+          "
         >
           <u-image
             width="24px"
@@ -42,7 +48,7 @@
       <view class="popup-content u-padding-35">
         <scroll-view
           scroll-y="true"
-          style="height: 80%; margin-top: 20%;"
+          style="height: 80%; margin-top: 20%"
         >
           <view class="popup-select">
             <view class="select-image">
@@ -55,32 +61,40 @@
               ></u-image>
               <text
                 class="select"
-                @click="() => {
-                  showBackground = true;
-                }"
+                @click="
+                  () => {
+                    showBackground = true
+                  }
+                "
               >选择背景</text>
             </view>
           </view>
           <EditorContent
             :editorDetail="messages"
-            @getContents="(html) => {
-              editMessages = html;
-            }"
+            @getContents="
+              (html) => {
+                editMessages = html
+              }
+            "
           ></EditorContent>
         </scroll-view>
         <view class="popup-btn">
           <view
             class="button orange"
-            @click="() => {
-              showEdit = false;
-            }"
+            @click="
+              () => {
+                showEdit = false
+              }
+            "
           >返回</view>
           <view
             class="button cyan"
-            @click="() => {
-              showView = true;
-              messages = editMessages;
-            }"
+            @click="
+              () => {
+                showView = true
+                messages = editMessages
+              }
+            "
           >预览</view>
           <view
             class="button pink"
@@ -128,13 +142,15 @@
           name="close"
           color="#2979ff"
           size="40"
-          @click="() => {
-            showView = false;
-          }"
+          @click="
+            () => {
+              showView = false
+            }
+          "
         ></u-icon>
         <scroll-view
           scroll-y="true"
-          style="height: 80%; margin-top: 20%;padding: 10px;"
+          style="height: 80%; margin-top: 20%; padding: 10px"
         >
           <u-parse :html="messages"></u-parse>
         </scroll-view>
@@ -152,8 +168,9 @@
 </template>
 
 <script>
-import { parseNdefRecord, str2ab } from "@/utils/record.js";
-import EditorContent from "@/components/Editor/index.vue";
+import { parseNdefRecord, str2ab } from '@/utils/record.js'
+import EditorContent from '@/components/Editor/index.vue'
+import NavBar from '@/components/NavBar/index.vue'
 
 export default {
   data() {
@@ -188,19 +205,28 @@ export default {
     }
   },
   components: {
-    EditorContent
+    NavBar,
+    EditorContent,
   },
   watch: {},
   computed: {
     getUrl() {
       // 根据背景类型返回对应的图片路径
-      return this.editBackground === 'MWE' ? this.MWE :
-        this.editBackground === 'BLUE' ? this.BLUE :
-        this.editBackground === 'PURPLE' ? this.PURPLE :
-        this.editBackground === 'SPRING' ? this.SPRING :
-        this.editBackground === 'WHITE' ? this.WHITE :
-        this.editBackground === 'JIM' ? this.JIM :
-        this.editBackground === 'SILVER' ? this.SILVER : '';
+      return this.editBackground === 'MWE'
+        ? this.MWE
+        : this.editBackground === 'BLUE'
+          ? this.BLUE
+          : this.editBackground === 'PURPLE'
+            ? this.PURPLE
+            : this.editBackground === 'SPRING'
+              ? this.SPRING
+              : this.editBackground === 'WHITE'
+                ? this.WHITE
+                : this.editBackground === 'JIM'
+                  ? this.JIM
+                  : this.editBackground === 'SILVER'
+                    ? this.SILVER
+                    : ''
     },
     bgList() {
       return [
@@ -211,7 +237,7 @@ export default {
         { name: '星空蓝', value: 'BLUE', image: this.BLUE },
         { name: '魅力紫', value: 'PURPLE', image: this.PURPLE },
         { name: '春日绿', value: 'SPRING', image: this.SPRING },
-      ];
+      ]
     },
   },
   onLoad() {
@@ -222,47 +248,47 @@ export default {
       // 获取NFC实例
       this.nfc = wx.getNFCAdapter()
       // 绑定监听 NFC 标签
-      this.nfc.onDiscovered(res => {
+      this.nfc.onDiscovered((res) => {
         console.log('监听到NFC标签:', res)
-        const { messages } = res;
+        const { messages } = res
         // 检查是否有消息
         if (messages && messages.length) {
           // 解析所有消息
-          const list = [];
+          const list = []
           messages.forEach((item, index) => {
-            console.log(`--- 消息 ${index + 1} ---`);
+            console.log(`--- 消息 ${index + 1} ---`)
 
             // 解析消息中的记录
             if (item.records && item.records.length) {
               item.records.forEach((record, recIndex) => {
-                const parsedRecord = parseNdefRecord(record);
-                console.log(`记录 ${recIndex + 1}:`, parsedRecord);
+                const parsedRecord = parseNdefRecord(record)
+                console.log(`记录 ${recIndex + 1}:`, parsedRecord)
 
                 // 在界面上显示 id 为 content 的记录内容
                 if (parsedRecord.id === 'message') {
-                  this.messages = parsedRecord.payload;
-                  if (!this.showEdit) return this.showView = true; // 如果没有编辑界面则显示查看界面
+                  this.messages = parsedRecord.payload
+                  if (!this.showEdit) return (this.showView = true) // 如果没有编辑界面则显示查看界面
                 }
                 // 如果记录类型是背景颜色，则设置背景颜色
                 if (parsedRecord.id === 'background') {
-                  this.background = parsedRecord.payload;
+                  this.background = parsedRecord.payload
                 }
 
                 // 将所有内容添加到 messagesList 中
-                list.push(parsedRecord);
-              });
-              this.messagesList = list;
+                list.push(parsedRecord)
+              })
+              this.messagesList = list
             }
-          });
+          })
         } else {
-          console.log('未发现 NDEF 消息');
+          console.log('未发现 NDEF 消息')
           wx.showToast({
             title: '标签无内容或格式不支持',
-            icon: 'none'
-          });
+            icon: 'none',
+          })
         }
         // 监听到数据进行返回 根据返回的数据在进行 处理
-        if (res.techs.includes("NDEF")) {
+        if (res.techs.includes('NDEF')) {
           const ndef = this.nfc.getNdef()
 
           ndef.connect({
@@ -276,7 +302,7 @@ export default {
             },
             fail(err) {
               console.log('err:', err)
-            }
+            },
           })
         }
       })
@@ -285,30 +311,30 @@ export default {
       this.nfc.startDiscovery({
         success(res) {
           console.log(res)
-          const { errno } = res;
-          this.nfcMessage = '开始监听';
+          const { errno } = res
+          this.nfcMessage = '开始监听'
         },
         fail(err) {
           console.log('err:', err)
-          const { errCode } = err;
+          const { errCode } = err
           if (errCode === 13000) {
-            this.nfcMessage = '设备不支持NFC';
+            this.nfcMessage = '设备不支持NFC'
           } else if (errCode === 13001) {
-            this.nfcMessage = '系统NFC开关未打开';
+            this.nfcMessage = '系统NFC开关未打开'
           } else if (errCode === 13010) {
-            this.nfcMessage = '未知错误';
+            this.nfcMessage = '未知错误'
           } else if (errCode === 13019) {
-            this.nfcMessage = '用户未授权';
+            this.nfcMessage = '用户未授权'
           } else if (errCode === 13013) {
-            this.nfcMessage = '未扫描到NFC标签';
+            this.nfcMessage = '未扫描到NFC标签'
           } else if (errCode === 13014) {
-            this.nfcMessage = '无效的标签技术';
+            this.nfcMessage = '无效的标签技术'
           } else if (errCode === 13017) {
-            this.nfcMessage = '相关读写操作失败';
+            this.nfcMessage = '相关读写操作失败'
           } else if (errCode === 13016) {
-            this.nfcMessage = '连接失败';
+            this.nfcMessage = '连接失败'
           }
-        }
+        },
       })
     },
     onWrite() {
@@ -319,49 +345,51 @@ export default {
           id: str2ab('mini-ios'), // iOS小程序
           tnf: 1,
           type: str2ab('U'),
-          payload: str2ab('weixin://dl/business/?t=XTSkBZlzqmn&cq=a%3Dhello', [0])
+          payload: str2ab('weixin://dl/business/?t=XTSkBZlzqmn&cq=a%3Dhello', [
+            0,
+          ]),
         },
         {
           id: str2ab('mini-android'), // 安卓小程序
           tnf: 4,
           type: str2ab('android.com:pkg'),
-          payload: str2ab('com.tencent.mm')
+          payload: str2ab('com.tencent.mm'),
         },
         {
           id: str2ab('message'), // 读写内容
           tnf: 1,
           type: str2ab('T'),
-          payload: str2ab(this.editMessages)
+          payload: str2ab(this.editMessages),
         },
         {
           id: str2ab('background'), // 读写内容
           tnf: 1,
           type: str2ab('T'),
-          payload: str2ab(this.editBackground)
+          payload: str2ab(this.editBackground),
         },
       ]
 
-      console.log('要写入的 NDEF 消息:', records);
+      console.log('要写入的 NDEF 消息:', records)
 
       ndef.writeNdefMessage({
         records: records,
         success() {
-          wx.showToast({ title: '写入成功' });
-          this.messages = this.editMessages;
-          this.editMessages = '';
-          this.showEdit = false;
+          wx.showToast({ title: '写入成功' })
+          this.messages = this.editMessages
+          this.editMessages = ''
+          this.showEdit = false
         },
         fail(err) {
-          console.error('写入失败:', err);
+          console.error('写入失败:', err)
           wx.showToast({
             title: '写入失败,请重试',
-            icon: 'none'
-          });
-        }
-      });
+            icon: 'none',
+          })
+        },
+      })
     },
     handleHold() {
-      uni.setStorageSync('storageMessage', this.editMessages);
+      uni.setStorageSync('storageMessage', this.editMessages)
     },
   },
   onUnload() {
@@ -369,14 +397,14 @@ export default {
     if (this.nfc) {
       this.nfc.stopDiscovery({
         success: () => {
-          console.log('停止监听 NFC 标签成功');
+          console.log('停止监听 NFC 标签成功')
         },
         fail: (err) => {
-          console.error('停止监听 NFC 标签失败:', err);
-        }
-      });
+          console.error('停止监听 NFC 标签失败:', err)
+        },
+      })
     }
-  }
+  },
 }
 </script>
 <style lang="scss" scoped>
@@ -398,24 +426,23 @@ export default {
   margin: 0;
   min-height: 100vh;
   background-color: #e493d0;
-  background-image:
-    radial-gradient(closest-side, rgba(235, 105, 78, 1), rgba(235, 105, 78, 0)),
+  background-image: radial-gradient(closest-side,
+      rgba(235, 105, 78, 1),
+      rgba(235, 105, 78, 0)),
     radial-gradient(closest-side, rgba(243, 11, 164, 1), rgba(243, 11, 164, 0)),
-    radial-gradient(closest-side, rgba(254, 234, 131, 1), rgba(254, 234, 131, 0)),
-    radial-gradient(closest-side, rgba(170, 142, 245, 1), rgba(170, 142, 245, 0)),
-    radial-gradient(closest-side, rgba(248, 192, 147, 1), rgba(248, 192, 147, 0));
-  background-size:
-    130vmax 130vmax,
-    80vmax 80vmax,
-    90vmax 90vmax,
-    110vmax 110vmax,
-    90vmax 90vmax;
-  background-position:
-    -80vmax -80vmax,
-    60vmax -30vmax,
-    10vmax 10vmax,
-    -30vmax -10vmax,
-    50vmax 50vmax;
+    radial-gradient(closest-side,
+      rgba(254, 234, 131, 1),
+      rgba(254, 234, 131, 0)),
+    radial-gradient(closest-side,
+      rgba(170, 142, 245, 1),
+      rgba(170, 142, 245, 0)),
+    radial-gradient(closest-side,
+      rgba(248, 192, 147, 1),
+      rgba(248, 192, 147, 0));
+  background-size: 130vmax 130vmax, 80vmax 80vmax, 90vmax 90vmax,
+    110vmax 110vmax, 90vmax 90vmax;
+  background-position: -80vmax -80vmax, 60vmax -30vmax, 10vmax 10vmax,
+    -30vmax -10vmax, 50vmax 50vmax;
   background-repeat: no-repeat;
   animation: 10s movement linear infinite;
 }
@@ -442,10 +469,9 @@ span {
   align-items: center;
   font-size: 5rem;
   color: transparent;
-  text-shadow:
-    0px 0px 1px rgba(255, 255, 255, 1),
-    0px 4px 4px rgba(0, 0, 0, .05);
-  letter-spacing: .2rem;
+  text-shadow: 0px 0px 1px rgba(255, 255, 255, 1),
+    0px 4px 4px rgba(0, 0, 0, 0.05);
+  letter-spacing: 0.2rem;
 }
 
 .container {
@@ -475,10 +501,9 @@ span {
   display: block;
   font-size: 16px;
   color: transparent;
-  text-shadow:
-    0px 0px 1px rgba(255, 255, 255, 1),
-    0px 4px 4px rgba(0, 0, 0, .05);
-  letter-spacing: .2rem;
+  text-shadow: 0px 0px 1px rgba(255, 255, 255, 1),
+    0px 4px 4px rgba(0, 0, 0, 0.05);
+  letter-spacing: 0.2rem;
 }
 
 .container-shadow {
@@ -594,7 +619,6 @@ span {
       box-shadow: 0px 2px 0px #2471a3;
     }
 
-
     .button.purple {
       background-color: #9b59b6;
       border: 1px solid #8e44ad;
@@ -633,66 +657,33 @@ span {
 
   0%,
   100% {
-    background-size:
-      130vmax 130vmax,
-      80vmax 80vmax,
-      90vmax 90vmax,
-      110vmax 110vmax,
-      90vmax 90vmax;
-    background-position:
-      -80vmax -80vmax,
-      60vmax -30vmax,
-      10vmax 10vmax,
-      -30vmax -10vmax,
-      50vmax 50vmax;
+    background-size: 130vmax 130vmax, 80vmax 80vmax, 90vmax 90vmax,
+      110vmax 110vmax, 90vmax 90vmax;
+    background-position: -80vmax -80vmax, 60vmax -30vmax, 10vmax 10vmax,
+      -30vmax -10vmax, 50vmax 50vmax;
   }
 
   25% {
-    background-size:
-      100vmax 100vmax,
-      90vmax 90vmax,
-      100vmax 100vmax,
-      90vmax 90vmax,
-      60vmax 60vmax;
-    background-position:
-      -60vmax -90vmax,
-      50vmax -40vmax,
-      0vmax -20vmax,
-      -40vmax -20vmax,
-      40vmax 60vmax;
+    background-size: 100vmax 100vmax, 90vmax 90vmax, 100vmax 100vmax,
+      90vmax 90vmax, 60vmax 60vmax;
+    background-position: -60vmax -90vmax, 50vmax -40vmax, 0vmax -20vmax,
+      -40vmax -20vmax, 40vmax 60vmax;
   }
 
   50% {
-    background-size:
-      80vmax 80vmax,
-      110vmax 110vmax,
-      80vmax 80vmax,
-      60vmax 60vmax,
-      80vmax 80vmax;
-    background-position:
-      -50vmax -70vmax,
-      40vmax -30vmax,
-      10vmax 0vmax,
-      20vmax 10vmax,
-      30vmax 70vmax;
+    background-size: 80vmax 80vmax, 110vmax 110vmax, 80vmax 80vmax,
+      60vmax 60vmax, 80vmax 80vmax;
+    background-position: -50vmax -70vmax, 40vmax -30vmax, 10vmax 0vmax,
+      20vmax 10vmax, 30vmax 70vmax;
   }
 
   75% {
-    background-size:
-      90vmax 90vmax,
-      90vmax 90vmax,
-      100vmax 100vmax,
-      90vmax 90vmax,
-      70vmax 70vmax;
-    background-position:
-      -50vmax -40vmax,
-      50vmax -30vmax,
-      20vmax 0vmax,
-      -10vmax 10vmax,
-      40vmax 60vmax;
+    background-size: 90vmax 90vmax, 90vmax 90vmax, 100vmax 100vmax,
+      90vmax 90vmax, 70vmax 70vmax;
+    background-position: -50vmax -40vmax, 50vmax -30vmax, 20vmax 0vmax,
+      -10vmax 10vmax, 40vmax 60vmax;
   }
 }
-
 
 /* From Uiverse.io by AlimurtuzaCodes */
 .btn-content {
@@ -714,11 +705,10 @@ span {
   justify-content: center;
   align-items: center;
   gap: 12px;
-  background: linear-gradient(0deg, #A47CF3, #683FEA);
+  background: linear-gradient(0deg, #a47cf3, #683fea);
   box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.4),
     inset 0px -4px 0px 0px rgba(0, 0, 0, 0.2),
-    0px 0px 0px 4px rgba(255, 255, 255, 0.2),
-    0px 0px 180px 0px #9917FF;
+    0px 0px 0px 4px rgba(255, 255, 255, 0.2), 0px 0px 180px 0px #9917ff;
   transform: translateY(-2px);
   cursor: pointer;
 
@@ -735,10 +725,9 @@ span {
     text-align: center;
     font-size: 18px;
     color: transparent;
-    text-shadow:
-      0px 0px 1px rgba(255, 255, 255, 1),
-      0px 4px 4px rgba(0, 0, 0, .05);
-    letter-spacing: .2rem;
+    text-shadow: 0px 0px 1px rgba(255, 255, 255, 1),
+      0px 4px 4px rgba(0, 0, 0, 0.05);
+    letter-spacing: 0.2rem;
   }
 }
 </style>
