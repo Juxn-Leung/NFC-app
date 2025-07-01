@@ -6,14 +6,14 @@
     {
       "path": "pages/home/home",
       "style": {
-        "navigationBarTitleText": "NFC读卡",
+        "navigationBarTitleText": "Fidelity",
         "enablePullDownRefresh": false
       }
     }
   ],
   "globalStyle": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "NFC",
+    "navigationBarTitleText": "Fidelity",
     "navigationBarBackgroundColor": "#0086D1",
     "backgroundColor": "#fff",
     "navigationStyle": "custom"
