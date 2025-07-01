@@ -1,41 +1,38 @@
 <template>
-  <view class="home u-flex u-flex-column u-flex-center u-padding-35">
+  <view class="home u-flex u-flex-column u-flex-center">
     <NavBar
       :backState="2000"
       bgColor="transparent"
     ></NavBar>
 
-    <view class="home-content">
-      <view class="container">
-        <u-image
-          width="100px"
-          height="100px"
-          src="/static/images/Ring.png"
-        ></u-image>
-      </view>
+    <view class="home-content u-padding-35">
+      <u-image
+        class="ring-image"
+        width="348rpx"
+        height="368rpx"
+        src="/static/images/Ring.png"
+      ></u-image>
+
+      <u-image
+        class="phone-image"
+        width="318rpx"
+        height="418rpx"
+        src="/static/images/phone.png"
+      ></u-image>
 
       <text class="container-text">将手机背面靠近戒指</text>
 
-      <view class="btn-content">
-        <view
-          class="btn"
-          @click="
-            () => {
-              showEdit = true
-              editBackground = background
-              editMessages = messages
-            }
-          "
-        >
-          <u-image
-            width="24px"
-            height="24px"
-            src="/static/images/start.png"
-            mode="aspectFill"
-          ></u-image>
-
-          <text class="text">编辑内容</text>
-        </view>
+      <view
+        class="btn-content"
+        @click="
+          () => {
+            showEdit = true
+            editBackground = background
+            editMessages = messages
+          }
+        "
+      >
+        <text class="text">编辑内容</text>
       </view>
 
       <u-image
@@ -88,7 +85,7 @@
         </scroll-view>
         <view class="popup-btn">
           <view
-            class="button orange"
+            class="button"
             @click="
               () => {
                 showEdit = false
@@ -96,7 +93,7 @@
             "
           >返回</view>
           <view
-            class="button cyan"
+            class="button default"
             @click="
               () => {
                 showView = true
@@ -105,7 +102,7 @@
             "
           >预览</view>
           <view
-            class="button pink"
+            class="button primary"
             @click="onWrite"
           >写入</view>
         </view>
@@ -426,54 +423,83 @@ export default {
     z-index: 10;
     background: transparent;
     position: relative;
+
+    .ring-image {
+      position: absolute;
+      top: 340rpx;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+    }
+
+    .phone-image {
+      position: absolute;
+      top: 354rpx;
+      right: 100rpx;
+      z-index: 1;
+      animation: phone-move-in 8s infinite;
+
+      @keyframes phone-move-in {
+        0% {
+          opacity: 0;
+          right: -200rpx;
+        }
+
+        10% {
+          opacity: 0.2;
+          right: 0rpx;
+        }
+
+        30% {
+          opacity: 1;
+          right: 0rpx;
+        }
+
+        40% {
+          opacity: 1;
+          right: 100rpx;
+        }
+
+        80% {
+          opacity: 1;
+          right: 100rpx;
+        }
+
+        100% {
+          opacity: 0;
+          right: 100rpx;
+        }
+      }
+    }
   }
 }
 
-span {
-  position: relative;
-  z-index: 10;
-  display: flex;
-  min-height: 100vh;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  font-size: 5rem;
-  color: transparent;
-  text-shadow: 0px 0px 1px rgba(255, 255, 255, 1),
-    0px 4px 4px rgba(0, 0, 0, 0.05);
-  letter-spacing: 0.2rem;
-}
-
-.container {
-  height: 30%;
-  width: 60%;
-  // background: #F1F1F1;
-  // border-radius: 20px;
-  // padding: 16px;
-  // box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  top: 35%;
-  left: 20%;
-  transform: translateY(-50%);
-  position: absolute;
-  z-index: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .container-text {
-  position: absolute;
-  top: 50%;
-  z-index: 10;
-  display: flex;
-  width: 100%;
+  height: 44rpx;
+  font-family: PingFang SC, PingFang SC;
+  font-weight: 500;
+  font-size: 32rpx;
+  color: #000000;
   text-align: center;
-  display: block;
-  font-size: 16px;
-  color: transparent;
-  text-shadow: 0px 0px 1px rgba(255, 255, 255, 1),
-    0px 4px 4px rgba(0, 0, 0, 0.05);
-  letter-spacing: 0.2rem;
+  font-style: normal;
+  text-transform: none;
+  position: absolute;
+  bottom: 36%;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: blink 4s infinite;
+
+  @keyframes blink {
+
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.2;
+    }
+  }
 }
 
 .container-shadow {
@@ -537,76 +563,35 @@ span {
     position: relative;
     padding-top: 16px;
     padding-bottom: 16px;
-    width: 100%;
     display: flex;
     justify-content: space-between;
-    width: 100%;
+    width: max-content;
+    margin-left: 50%;
+    transform: translateX(-50%);
 
     .button {
-      color: #ecf0f1;
-      font-size: 15px;
-      cursor: pointer;
+      width: 180rpx;
+      height: 72rpx;
+      border: 1px solid #37342B;
+      border-radius: 36rpx;
       text-align: center;
-      line-height: 32px;
-      width: 90px;
-      height: 32px;
-      border-radius: 30px;
-      transition: all 0.1s;
+      line-height: 68rpx;
+      color: #37342B;
+      font-size: 36rpx;
+      margin: 0 16rpx;
     }
 
-    .button:active {
-      position: relative;
-      top: 2px;
+    .button.default {
+      color: #ffcc14;
+      background: #fff6d5;
+      border: 1px solid #ffcc14;
     }
 
-    .button.orange {
-      background-color: #e67e22;
-      border: 1px solid #f39c12;
-      box-shadow: 0px 6px 0px #d35400;
-    }
-
-    .button.orange:active {
-      box-shadow: 0px 2px 0px #d35400;
-    }
-
-    .button.cyan {
-      background-color: #1abc9c;
-      border: 1px solid #16a085;
-      box-shadow: 0px 6px 0px #148f77;
-    }
-
-    .button.cyan:active {
-      box-shadow: 0px 2px 0px #148f77;
-    }
-
-    .button.blue {
-      background-color: #3498db;
-      border: 1px solid #2980b9;
-      box-shadow: 0px 6px 0px #2471a3;
-    }
-
-    .button.blue:active {
-      box-shadow: 0px 2px 0px #2471a3;
-    }
-
-    .button.purple {
-      background-color: #9b59b6;
-      border: 1px solid #8e44ad;
-      box-shadow: 0px 6px 0px #7d3c98;
-    }
-
-    .button.purple:active {
-      box-shadow: 0px 2px 0px #7d3c98;
-    }
-
-    .button.pink {
-      background-color: #e493d0;
-      border: 1px solid #dc4a89;
-      box-shadow: 0px 6px 0px #e23798;
-    }
-
-    .button.pink:active {
-      box-shadow: 0px 2px 0px #e23798;
+    .button.primary {
+      background: #37342B;
+      color: #F8E49D;
+      border: none;
+      list-style: 72rpx;
     }
   }
 
@@ -658,46 +643,27 @@ span {
 /* From Uiverse.io by AlimurtuzaCodes */
 .btn-content {
   position: absolute;
-  bottom: 60px;
-  width: 100%;
+  bottom: 172rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 594rpx;
+  height: 100rpx;
+  background: linear-gradient(360deg, #23221E 0%, #37342B 100%);
+  border-radius: 200rpx 200rpx 200rpx 200rpx;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.btn {
-  border: none;
-  width: 160px;
-  height: 54px;
-  border-radius: 30px;
-  padding: 0 16px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  background: linear-gradient(0deg, #a47cf3, #683fea);
-  box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.4),
-    inset 0px -4px 0px 0px rgba(0, 0, 0, 0.2),
-    0px 0px 0px 4px rgba(255, 255, 255, 0.2), 0px 0px 180px 0px #9917ff;
-  transform: translateY(-2px);
-  cursor: pointer;
-
-  .sparkle {
-    color: white;
-    transform: scale(1.2);
-  }
 
   .text {
-    position: relative;
-    display: block;
-    z-index: 10;
-    width: 100%;
+    width: 128rpx;
+    height: 48rpx;
+    font-family: Source Han Sans CN, Source Han Sans CN;
+    font-weight: bold;
+    font-size: 32rpx;
+    color: #F8E49D;
     text-align: center;
-    font-size: 18px;
-    color: transparent;
-    text-shadow: 0px 0px 1px rgba(255, 255, 255, 1),
-      0px 4px 4px rgba(0, 0, 0, 0.05);
-    letter-spacing: 0.2rem;
+    font-style: normal;
+    text-transform: none;
   }
 }
 </style>
