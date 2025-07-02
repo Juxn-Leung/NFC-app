@@ -43,10 +43,10 @@
         :class="'iconfont icon-zitijiacu ' + (formats.bold ? 'ql-active' : '')"
         data-name="bold"
       ></i>
-      <i
+      <!-- <i
         :class="'iconfont icon-zitishanchuxian ' + (formats.strike ? 'ql-active' : '')"
         data-name="strike"
-      ></i>
+      ></i> -->
       <i
         :class="'iconfont icon-zitixieti ' + (formats.italic ? 'ql-active' : '')"
         data-name="italic"
@@ -71,16 +71,16 @@
         data-name="align"
         data-value="justify"
       ></i>
-      <i
+      <!-- <i
         :class="'iconfont icon-line-height ' + (formats.lineHeight ? 'ql-active' : '')"
         data-name="lineHeight"
         data-value="2"
-      ></i>
-      <i
+      ></i> -->
+      <!-- <i
         :class="'iconfont icon-Character-Spacing ' + (formats.letterSpacing ? 'ql-active' : '')"
         data-name="letterSpacing"
         data-value="2em"
-      ></i>
+      ></i> -->
       <!-- <i
         :class="'iconfont icon-722bianjiqi_duanqianju ' + (formats.marginTop ? 'ql-active' : '')"
         data-name="marginTop"
@@ -123,28 +123,28 @@
         class="iconfont icon-date"
         @tap="insertDate"
       ></i>
-      <i
+      <!-- <i
         class="iconfont icon-undo"
         @tap="undo"
       ></i>
       <i
         class="iconfont icon-redo"
         @tap="redo"
-      ></i>
-      <i
+      ></i> -->
+      <!-- <i
         :class="'iconfont icon-zitixiahuaxian ' + (formats.underline ? 'ql-active' : '')"
         data-name="underline"
-      ></i>
+      ></i> -->
       <!-- <i
         class="iconfont icon--checklist"
         data-name="list"
         data-value="check"
       ></i> -->
-      <i
+      <!-- <i
         :class="'iconfont icon-youxupailie ' + (formats.list === 'ordered' ? 'ql-active' : '')"
         data-name="list"
         data-value="ordered"
-      ></i>
+      ></i> -->
       <!-- <i
         :class="'iconfont icon-wuxupailie ' + (formats.list === 'bullet' ? 'ql-active' : '')"
         data-name="list"

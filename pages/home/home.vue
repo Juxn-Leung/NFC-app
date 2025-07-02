@@ -23,16 +23,26 @@
       <text class="container-text">将手机背面靠近戒指</text>
 
       <view
+        v-if="userInfo.status === 'registered'"
         class="btn-content"
         @click="
           () => {
             showEdit = true
             editBackground = background
             editMessages = messages
+            noticeMessage = messages
           }
         "
       >
         <text class="text">编辑内容</text>
+      </view>
+
+      <view
+        v-else
+        class="btn-content"
+        @click="handleRegister"
+      >
+        <text class="text">注册</text>
       </view>
 
       <u-image
@@ -60,8 +70,8 @@
               <u-image
                 v-if="editBackground"
                 :src="getUrl"
-                width="72px"
-                height="128px"
+                width="144rpx"
+                height="256rpx"
                 mode="aspectFill"
               ></u-image>
               <text
@@ -71,10 +81,42 @@
                     showBackground = true
                   }
                 "
-              >选择背景</text>
+              >背景</text>
+            </view>
+            <view
+              v-if="editMode === 'text'"
+              class="select-image"
+              @click="
+                () => {
+                  showModes = true
+                }"
+            >
+              <u-image
+                src="/static/images/text.png"
+                width="144rpx"
+                height="144rpx"
+                mode="aspectFill"
+              ></u-image>
+              <text class="select">文本展示</text>
+            </view>
+            <view
+              v-if="editMode === 'notice'"
+              class="select-image horizontal"
+              @click="
+                () => {
+                  showModes = true
+                }"
+            >
+              <u-notice-bar
+                mode="horizontal"
+                :volume-icon="false"
+                style="width: 100%;"
+                :list="['滚动展示']"
+              ></u-notice-bar>
             </view>
           </view>
           <EditorContent
+            v-if="editMode === 'text'"
             :editorDetail="messages"
             @getContents="
               (html) => {
@@ -82,6 +124,16 @@
               }
             "
           ></EditorContent>
+          <u-input
+            v-if="editMode === 'notice'"
+            v-model="noticeMessage"
+            type="textarea"
+            :border="true"
+            :maxlength="200"
+            auto-height
+            :height="600"
+            class="u-margin-top-40"
+          />
         </scroll-view>
         <view class="popup-btn">
           <view
@@ -97,7 +149,12 @@
             @click="
               () => {
                 showView = true
-                messages = editMessages
+                mode = editMode
+                if (editMode === 'notice') {
+                  messages = noticeMessage
+                } else if (editMode === 'text') {
+                  messages = editMessages
+                }
               }
             "
           >预览</view>
@@ -135,6 +192,23 @@
       </view>
     </u-modal>
 
+    <u-modal
+      title="选择模式"
+      v-model="showModes"
+    >
+      <view class="slot-content">
+        <u-radio-group v-model="editMode">
+          <u-radio
+            v-for="(item, index) in modesList"
+            :key="index"
+            :name="item.value"
+          >
+            <text>{{ item.name }}</text>
+          </u-radio>
+        </u-radio-group>
+      </view>
+    </u-modal>
+
     <u-popup
       v-model="showView"
       mode="right"
@@ -157,7 +231,20 @@
           scroll-y="true"
           style="height: 80%; margin-top: 20%; padding: 10px"
         >
-          <u-parse :html="messages"></u-parse>
+          <u-parse
+            v-if="mode === 'text'"
+            :html="messages"
+          ></u-parse>
+          <u-notice-bar
+            v-if="mode === 'notice'"
+            mode="horizontal"
+            :volume-icon="false"
+            :bg-color="'transparent'"
+            :color="'#37342B'"
+            :font-size="100"
+            style="width: 100%; margin-top: 20px;"
+            :list="[messages]"
+          ></u-notice-bar>
         </scroll-view>
       </view>
       <u-image
@@ -188,6 +275,17 @@ export default {
       PURPLE: require('@/static/images/PURPLE.jpg'),
       SPRING: require('@/static/images/SPRING.jpg'),
 
+      modesList: [
+        { name: '文字展示', value: 'text' },
+        { name: '滚动展示', value: 'notice' },
+      ],
+
+      userInfo: {
+        name: '',
+        phone: '',
+        status: '',
+      },
+
       // NFC 实例
       nfc: null,
       ndef: null,
@@ -197,16 +295,20 @@ export default {
       messages: '', // 消息内容
       background: 'MWE', // 背景 星空蓝（BLUE）、梦幻粉（MWE）、魅力紫（PURPLE）
       music: '', // 音乐地址
+      mode: 'text',
 
       editMessages: '',
+      noticeMessage: '', // 滚动展示的消息内容
       editBackground: 'MWE',
       editMusic: '测试Music',
+      editMode: 'text', // 编辑模式 text (文字展示)、notice (滚动展示)
 
       messagesList: [], // 用于存储所有消息内容
 
       showEdit: false,
       showView: false,
       showBackground: false,
+      showModes: false,
     }
   },
   components: {
@@ -246,7 +348,13 @@ export default {
     },
   },
   onLoad() {
-    this.nfcINfo()
+    console.log('onLoad');
+    this.nfcINfo();
+  },
+  onShow() {
+    // 页面显示时，检查是否有存储的消息内容
+    this.userInfo = uni.getStorageSync('userInfo')
+    console.log('获取到的用户信息:', this.userInfo)
   },
   methods: {
     nfcINfo() {
@@ -277,6 +385,11 @@ export default {
                 // 如果记录类型是背景颜色，则设置背景颜色
                 if (parsedRecord.id === 'background') {
                   this.background = parsedRecord.payload
+                }
+
+                // 如果记录类型是模式，则设置编辑模式
+                if (parsedRecord.id === 'mode') {
+                  this.mode = parsedRecord.payload
                 }
 
                 // 将所有内容添加到 messagesList 中
@@ -364,13 +477,19 @@ export default {
           id: str2ab('message'), // 读写内容
           tnf: 1,
           type: str2ab('T'),
-          payload: str2ab(this.editMessages),
+          payload: str2ab(this.mode === 'text' ? this.editMessages : this.noticeMessage),
         },
         {
           id: str2ab('background'), // 读写内容
           tnf: 1,
           type: str2ab('T'),
           payload: str2ab(this.editBackground),
+        },
+        {
+          id: str2ab('mode'), // 读写内容
+          tnf: 1,
+          type: str2ab('T'),
+          payload: str2ab(this.editMode),
         },
       ]
 
@@ -380,8 +499,13 @@ export default {
         records: records,
         success() {
           wx.showToast({ title: '写入成功' })
-          this.messages = this.editMessages
+          if (mode === 'text') {
+            this.messages = this.editMessages
+          } else if (mode === 'notice') {
+            this.messages = this.noticeMessage
+          }
           this.editMessages = ''
+          this.noticeMessage = ''
           this.showEdit = false
         },
         fail(err) {
@@ -395,6 +519,11 @@ export default {
     },
     handleHold() {
       uni.setStorageSync('storageMessage', this.editMessages)
+    },
+    handleRegister() {
+      uni.navigateTo({
+        url: '/pages/register/register',
+      })
     },
   },
   onUnload() {
@@ -538,24 +667,32 @@ export default {
     display: flex;
 
     .select-image {
-      margin-right: 16px;
-      border-radius: 8px;
-      height: 128px;
+      margin-right: 32rpx;
+      border-radius: 16rpx;
+      height: 256rpx;
       overflow: hidden;
       border: 2px solid #bbbbbb;
-      border-radius: 8px;
+      border-radius: 16rpx;
       position: relative;
 
       .select {
-        width: 72px;
-        height: 128px;
+        width: 144rpx;
+        height: 144rpx;
         text-align: center;
-        line-height: 128px;
+        line-height: 144rpx;
         z-index: 10;
         position: absolute;
-        top: 0;
+        bottom: 0;
         left: 0;
       }
+    }
+
+    .select-image.horizontal {
+      width: 256rpx;
+      height: 144rpx;
+      margin-top: 56rpx;
+      display: flex;
+      align-items: center;
     }
   }
 
