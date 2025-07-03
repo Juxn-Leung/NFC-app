@@ -146,17 +146,7 @@
           >返回</view>
           <view
             class="button default"
-            @click="
-              () => {
-                showView = true
-                mode = editMode
-                if (editMode === 'notice') {
-                  messages = noticeMessage
-                } else if (editMode === 'text') {
-                  messages = editMessages
-                }
-              }
-            "
+            @click="handleView"
           >预览</view>
           <view
             class="button primary"
@@ -237,13 +227,13 @@
             :html="messages"
           ></u-parse>
           <u-notice-bar
+            class="notice-bar"
             v-if="mode === 'notice'"
             mode="horizontal"
             :volume-icon="false"
             :bg-color="'transparent'"
             :color="'#37342B'"
             :font-size="100"
-            style="width: 100%; margin-top: 20px;"
             :list="[messages]"
           ></u-notice-bar>
         </scroll-view>
@@ -255,7 +245,7 @@
             }"
         >
           <u-image
-            v-if="screen === 'horizontal'"
+            v-if="screen === 'vertical'"
             src="/static/icon/horizontal.png"
             width="60rpx"
             height="60rpx"
@@ -542,6 +532,22 @@ export default {
         },
       })
     },
+    handleView() {
+      // showView = true
+      this.mode = this.editMode
+      if (this.editMode === 'notice') {
+        this.messages = this.noticeMessage
+      } else if (this.editMode === 'text') {
+        this.messages = this.editMessages
+      }
+      this.$store.commit('content/changeMessage', this.messages)
+      this.$store.commit('content/changeBackground', this.editBackground)
+      this.$store.commit('content/changeMode', this.mode)
+      uni.navigateTo({
+        url: '/pages/view/view',
+      })
+    },
+
     handleHold() {
       uni.setStorageSync('storageMessage', this.editMessages)
     },
@@ -686,15 +692,27 @@ export default {
   left: 0;
 
   .view-content {
-    height: 100%;
-    width: 100%;
+    height: 100vh;
+    width: 100vw;
     padding: 10px;
-    transition: all 0.3s ease-in-out;
+    position: absolute;
+    left: 0;
+    top: 0;
 
     &.horizontal {}
 
     &.vertical {
+      height: 100vw;
+      width: 100vh;
+      left: -50%;
+      top: -50%;
       transform: rotate(90deg);
+    }
+
+    .notice-bar {
+      width: 100%;
+      margin-top: 50%;
+      transform: translateY(-50%);
     }
   }
 

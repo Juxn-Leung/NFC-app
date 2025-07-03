@@ -16,6 +16,14 @@
         "navigationBarTitleText": "注册",
         "enablePullDownRefresh": false
       }
+    },
+    {
+      "path": "pages/view/view",
+      "style": {
+        "navigationBarTitleText": "",
+        "enablePullDownRefresh": false,
+        "pageOrientation": "auto" 
+      }
     }
   ],
   "globalStyle": {
