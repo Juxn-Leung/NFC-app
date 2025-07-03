@@ -3,11 +3,11 @@ export default {
   methods: {},
   onLaunch: function () {
     console.log('App Launch')
-    uni.setStorageSync('userInfo', {
-      name: '',
-      phone: '',
-      status: '' // 假设已注册
-    });
+    // uni.setStorageSync('userInfo', {
+    //   name: '',
+    //   phone: '',
+    //   status: '' // 假设已注册
+    // });
   },
   onShow: function () {
     console.log('App Show')

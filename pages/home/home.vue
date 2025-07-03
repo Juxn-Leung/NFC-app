@@ -10,14 +10,14 @@
         class="ring-image"
         width="348rpx"
         height="368rpx"
-        src="/static/images/Ring.png"
+        src="/static/icon/ring.png"
       ></u-image>
 
       <u-image
         class="phone-image"
         width="318rpx"
         height="418rpx"
-        src="/static/images/phone.png"
+        src="/static/icon/phone.png"
       ></u-image>
 
       <text class="container-text">将手机背面靠近戒指</text>
@@ -92,7 +92,7 @@
                 }"
             >
               <u-image
-                src="/static/images/text.png"
+                src="/static/icon/text.png"
                 width="144rpx"
                 height="144rpx"
                 mode="aspectFill"
@@ -229,7 +229,8 @@
         ></u-icon>
         <scroll-view
           scroll-y="true"
-          style="height: 80%; margin-top: 20%; padding: 10px"
+          class="view-content"
+          :class="screen === 'horizontal' ? 'u-flex u-flex-row horizontal' : 'u-flex u-flex-column vertical'"
         >
           <u-parse
             v-if="mode === 'text'"
@@ -246,6 +247,28 @@
             :list="[messages]"
           ></u-notice-bar>
         </scroll-view>
+        <view
+          class="popup-screen"
+          @click="
+            () => {
+              screen = screen === 'horizontal' ? 'vertical' : 'horizontal'
+            }"
+        >
+          <u-image
+            v-if="screen === 'horizontal'"
+            src="/static/icon/horizontal.png"
+            width="60rpx"
+            height="60rpx"
+            mode="aspectFill"
+          ></u-image>
+          <u-image
+            v-else
+            src="/static/icon/vertical.png"
+            width="60rpx"
+            height="60rpx"
+            mode="aspectFill"
+          ></u-image>
+        </view>
       </view>
       <u-image
         v-if="getUrl"
@@ -304,6 +327,8 @@ export default {
       editMode: 'text', // 编辑模式 text (文字展示)、notice (滚动展示)
 
       messagesList: [], // 用于存储所有消息内容
+
+      screen: 'horizontal', // 横屏 horizontal 竖屏 vertical
 
       showEdit: false,
       showView: false,
@@ -660,6 +685,19 @@ export default {
   top: 0;
   left: 0;
 
+  .view-content {
+    height: 100%;
+    width: 100%;
+    padding: 10px;
+    transition: all 0.3s ease-in-out;
+
+    &.horizontal {}
+
+    &.vertical {
+      transform: rotate(90deg);
+    }
+  }
+
   .popup-select {
     position: relative;
     width: 100%;
@@ -734,8 +772,14 @@ export default {
 
   .popup-close {
     position: absolute;
-    top: 40px;
-    left: 20px;
+    top: 40rpx;
+    left: 40rpx;
+  }
+
+  .popup-screen {
+    position: absolute;
+    bottom: 40rpx;
+    right: 40rpx;
   }
 }
 
