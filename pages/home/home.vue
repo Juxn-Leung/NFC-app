@@ -29,8 +29,12 @@
           () => {
             showEdit = true
             editBackground = background
-            editMessages = messages
-            noticeMessage = messages
+            editMode = mode
+            if (mode === 'text') {
+              editMessages = messages
+            } else if (mode === 'notice') {
+              noticeMessage = messages
+            }
           }
         "
       >
@@ -198,77 +202,6 @@
         </u-radio-group>
       </view>
     </u-modal>
-
-    <u-popup
-      v-model="showView"
-      mode="right"
-      width="100%"
-      height="100%"
-    >
-      <view class="popup-content u-padding-35">
-        <u-icon
-          class="popup-close"
-          name="close"
-          color="#2979ff"
-          size="40"
-          @click="
-            () => {
-              showView = false
-            }
-          "
-        ></u-icon>
-        <scroll-view
-          scroll-y="true"
-          class="view-content"
-          :class="screen === 'horizontal' ? 'u-flex u-flex-row horizontal' : 'u-flex u-flex-column vertical'"
-        >
-          <u-parse
-            v-if="mode === 'text'"
-            :html="messages"
-          ></u-parse>
-          <u-notice-bar
-            class="notice-bar"
-            v-if="mode === 'notice'"
-            mode="horizontal"
-            :volume-icon="false"
-            :bg-color="'transparent'"
-            :color="'#37342B'"
-            :font-size="100"
-            :list="[messages]"
-          ></u-notice-bar>
-        </scroll-view>
-        <view
-          class="popup-screen"
-          @click="
-            () => {
-              screen = screen === 'horizontal' ? 'vertical' : 'horizontal'
-            }"
-        >
-          <u-image
-            v-if="screen === 'vertical'"
-            src="/static/icon/horizontal.png"
-            width="60rpx"
-            height="60rpx"
-            mode="aspectFill"
-          ></u-image>
-          <u-image
-            v-else
-            src="/static/icon/vertical.png"
-            width="60rpx"
-            height="60rpx"
-            mode="aspectFill"
-          ></u-image>
-        </view>
-      </view>
-      <u-image
-        v-if="getUrl"
-        class="popup-background"
-        width="100%"
-        height="100%"
-        :src="getUrl"
-        mode="aspectFill"
-      ></u-image>
-    </u-popup>
   </view>
 </template>
 
@@ -280,9 +213,9 @@ import NavBar from '@/components/NavBar/index.vue'
 export default {
   data() {
     return {
-      WHITE: require('@/static/images/WHITE.jpg'),
-      JIM: require('@/static/images/JIM.jpg'),
-      SILVER: require('@/static/images/SILVER.jpg'),
+      WHITE: require('@/static/images/WHITE_w.jpg'),
+      JIM: require('@/static/images/JIM_w.jpg'),
+      SILVER: require('@/static/images/SILVER_w.jpg'),
       BLUE: require('@/static/images/BLUE.jpg'),
       MWE: require('@/static/images/MWE.png'),
       PURPLE: require('@/static/images/PURPLE.jpg'),
@@ -302,26 +235,24 @@ export default {
       // NFC 实例
       nfc: null,
       ndef: null,
+      nfcStatus: false, // NFC 状态
 
       nfcMessage: '没有NFC标签',
 
       messages: '', // 消息内容
-      background: 'MWE', // 背景 星空蓝（BLUE）、梦幻粉（MWE）、魅力紫（PURPLE）
+      background: 'WHITE', // 背景 星空蓝（BLUE）、梦幻粉（MWE）、魅力紫（PURPLE）
       music: '', // 音乐地址
       mode: 'text',
 
       editMessages: '',
       noticeMessage: '', // 滚动展示的消息内容
-      editBackground: 'MWE',
+      editBackground: 'WHITE',
       editMusic: '测试Music',
       editMode: 'text', // 编辑模式 text (文字展示)、notice (滚动展示)
-
-      messagesList: [], // 用于存储所有消息内容
 
       screen: 'horizontal', // 横屏 horizontal 竖屏 vertical
 
       showEdit: false,
-      showView: false,
       showBackground: false,
       showModes: false,
     }
@@ -364,15 +295,16 @@ export default {
   },
   onLoad() {
     console.log('onLoad');
-    this.nfcINfo();
+    this.nfcInfo();
   },
   onShow() {
+    this.nfcStatus = true;
     // 页面显示时，检查是否有存储的消息内容
     this.userInfo = uni.getStorageSync('userInfo')
     console.log('获取到的用户信息:', this.userInfo)
   },
   methods: {
-    nfcINfo() {
+    nfcInfo() {
       // 获取NFC实例
       this.nfc = wx.getNFCAdapter()
       // 绑定监听 NFC 标签
@@ -381,8 +313,6 @@ export default {
         const { messages } = res
         // 检查是否有消息
         if (messages && messages.length) {
-          // 解析所有消息
-          const list = []
           messages.forEach((item, index) => {
             console.log(`--- 消息 ${index + 1} ---`)
 
@@ -395,7 +325,6 @@ export default {
                 // 在界面上显示 id 为 content 的记录内容
                 if (parsedRecord.id === 'message') {
                   this.messages = parsedRecord.payload
-                  if (!this.showEdit) return (this.showView = true) // 如果没有编辑界面则显示查看界面
                 }
                 // 如果记录类型是背景颜色，则设置背景颜色
                 if (parsedRecord.id === 'background') {
@@ -406,13 +335,22 @@ export default {
                 if (parsedRecord.id === 'mode') {
                   this.mode = parsedRecord.payload
                 }
-
-                // 将所有内容添加到 messagesList 中
-                list.push(parsedRecord)
               })
-              this.messagesList = list
+
+              if (this.messages && !this.showEdit && this.nfcStatus) {
+                this.$store.commit('content/changeMessage', this.messages)
+                this.$store.commit('content/changeBackground', this.background)
+                this.$store.commit('content/changeMode', this.mode)
+                uni.navigateTo({
+                  url: '/pages/view/view',
+                  success: () => {
+                    this.nfcStatus = false;
+                  },
+                })
+              }
             }
           })
+
         } else {
           console.log('未发现 NDEF 消息')
           wx.showToast({
@@ -514,9 +452,9 @@ export default {
         records: records,
         success() {
           wx.showToast({ title: '写入成功' })
-          if (mode === 'text') {
+          if (this.mode === 'text') {
             this.messages = this.editMessages
-          } else if (mode === 'notice') {
+          } else if (this.mode === 'notice') {
             this.messages = this.noticeMessage
           }
           this.editMessages = ''
@@ -533,7 +471,6 @@ export default {
       })
     },
     handleView() {
-      // showView = true
       this.mode = this.editMode
       if (this.editMode === 'notice') {
         this.messages = this.noticeMessage
@@ -545,6 +482,9 @@ export default {
       this.$store.commit('content/changeMode', this.mode)
       uni.navigateTo({
         url: '/pages/view/view',
+        success: () => {
+          this.nfcStatus = false;
+        },
       })
     },
 
@@ -556,19 +496,22 @@ export default {
         url: '/pages/register/register',
       })
     },
+    handleStopNFC() {
+      if (this.nfc) {
+        this.nfc.stopDiscovery({
+          success: () => {
+            console.log('停止监听 NFC 标签成功')
+          },
+          fail: (err) => {
+            console.log('停止监听 NFC 标签失败:', err)
+          },
+        })
+      }
+    }
   },
   onUnload() {
     // 停止监听 NFC 标签
-    if (this.nfc) {
-      this.nfc.stopDiscovery({
-        success: () => {
-          console.log('停止监听 NFC 标签成功')
-        },
-        fail: (err) => {
-          console.error('停止监听 NFC 标签失败:', err)
-        },
-      })
-    }
+    this.handleStopNFC()
   },
 }
 </script>
@@ -698,16 +641,6 @@ export default {
     position: absolute;
     left: 0;
     top: 0;
-
-    &.horizontal {}
-
-    &.vertical {
-      height: 100vw;
-      width: 100vh;
-      left: -50%;
-      top: -50%;
-      transform: rotate(90deg);
-    }
 
     .notice-bar {
       width: 100%;

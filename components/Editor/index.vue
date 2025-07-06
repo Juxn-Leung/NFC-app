@@ -201,7 +201,6 @@
         id="editor"
         class="ql-container"
         show-img-size
-        :read-only="isEdit"
         show-img-resize
         show-img-toolbar
         :readOnly="readOnly"

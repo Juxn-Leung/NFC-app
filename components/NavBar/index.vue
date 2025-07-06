@@ -564,38 +564,43 @@ export default {
 };
 </script>
 <style lang="scss">
+@function tovmin($rpx) {
+  //$rpx为需要转换的字号
+  @return #{$rpx * 100 / 750}vmin;
+}
+
 .header_content {
   /* #ifndef APP-NVUE */
   display: flex;
   /* #endif */
   /* #ifdef MP */
-  padding-right: 190rpx;
+  padding-right: tovmin(190);
   box-sizing: border-box;
   /* #endif */
-  width: 750rpx;
+  width: tovmin(750);
   align-items: flex-end;
   justify-content: space-between;
   flex-direction: row;
-  height: 88rpx;
+  height: tovmin(88);
   position: relative;
 }
 
 .header_station {
-  height: 88rpx;
+  height: tovmin(88);
 }
 
 .header_shadow {
   // border-style: solid;
   // border-width: 2rpx;
   // border-color: #f5f5f5;
-  box-shadow: 0 0 6rpx 0 #ddd;
+  box-shadow: 0 0 tovmin(6) 0 #ddd;
 }
 
 .header_fixed {
   position: fixed;
   top: 0;
   left: 0;
-  width: 750rpx;
+  width: tovmin(750);
   z-index: 99;
 }
 
@@ -604,7 +609,7 @@ export default {
   top: 0;
   left: 0;
   z-index: 99;
-  width: 750rpx;
+  width: tovmin(750);
   background-color: transparent !important;
 }
 
@@ -614,7 +619,7 @@ export default {
   /* #endif */
   flex-direction: row;
   align-items: center;
-  height: 88rpx;
+  height: tovmin(88);
   flex: 1;
 }
 
@@ -625,7 +630,7 @@ export default {
 }
 
 .header_left_back {
-  width: 56rpx;
+  width: tovmin(56);
   height: 100%;
   /* #ifndef APP-PLUS-NVUE */
   display: flex;
@@ -635,12 +640,12 @@ export default {
 }
 
 .header_icon {
-  width: 34rpx;
-  height: 34rpx;
+  width: tovmin(34);
+  height: tovmin(34);
 }
 
 .header_left_home {
-  width: 56rpx;
+  width: tovmin(56);
   height: 100%;
   /* #ifndef APP-PLUS-NVUE */
   display: flex;
@@ -655,15 +660,15 @@ export default {
   /* #endif */
   flex-direction: row;
   align-items: center;
-  height: 56rpx;
-  margin-left: 16rpx;
+  height: tovmin(56);
+  margin-left: tovmin(16);
 }
 
 .header_title {
-  height: 88rpx;
-  font-size: 32rpx;
-  padding-left: 30rpx;
-  padding-right: 30rpx;
+  height: tovmin(88);
+  font-size: tovmin(32);
+  padding-left: tovmin(30);
+  padding-right: tovmin(30);
   font-weight: 700;
   text-overflow: ellipsis;
   /* #ifndef APP-PLUS-NVUE */
@@ -678,19 +683,19 @@ export default {
   align-items: center;
   justify-content: center;
   /* #ifdef MP */
-  max-width: calc(100vw - 160rpx);
+  max-width: calc(100vw - tovmin(160));
   /* #endif */
 }
 
 .header_title_center {
   position: absolute;
-  bottom: 0rpx;
-  left: 375rpx;
+  bottom: 0;
+  left: tovmin(375);
   transform: translateX(-50%);
 }
 
 .header_right_info {
-  height: 88rpx;
+  height: tovmin(88);
   /* #ifndef APP-PLUS-NVUE */
   display: flex;
   flex-shrink: 0;
@@ -700,9 +705,9 @@ export default {
 }
 
 .header_btnMongol {
-  border-radius: 33rpx;
+  border-radius: tovmin(33);
   border-style: solid;
-  border-width: 2rpx;
+  border-width: tovmin(2);
   border-color: rgba(0, 0, 0, 0.1);
   background-color: rgba(255, 255, 255, 0.7);
   /* #ifndef APP-PLUS-NVUE */
@@ -712,7 +717,7 @@ export default {
 
 .header_btnMongol_left_back,
 .header_btnMongol_left_home {
-  width: 70rpx;
+  width: tovmin(70);
 }
 
 .header_transparentFixed {
@@ -723,10 +728,10 @@ export default {
 
 .header_transparentFixed_left_info {
   border-style: solid;
-  border-width: 2rpx;
+  border-width: tovmin(2);
   border-color: rgba(0, 0, 0, 0.1);
   background-color: rgba(255, 255, 255, 0.7);
-  border-radius: 33rpx;
+  border-radius: tovmin(33);
   /* #ifndef APP-PLUS-NVUE */
   box-sizing: border-box;
   /* #endif */
@@ -734,7 +739,7 @@ export default {
 
 .header_transparentFixed_colorWhite_left_info {
   border-style: solid;
-  border-width: 2rpx;
+  border-width: tovmin(2);
   border-color: rgba(255, 255, 255, 0.3);
   background-color: rgba(0, 0, 0, 0.2);
 }
@@ -742,7 +747,7 @@ export default {
 //颜色白色
 .header_colorWhite_btnMongol {
   border-style: solid;
-  border-width: 2rpx;
+  border-width: tovmin(2);
   border-color: rgba(255, 255, 255, 0.3);
   background-color: rgba(0, 0, 0, 0.2);
 }
