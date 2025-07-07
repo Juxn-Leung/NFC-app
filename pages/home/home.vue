@@ -8,15 +8,15 @@
     <view class="home-content u-padding-35">
       <u-image
         class="ring-image"
-        width="348rpx"
-        height="368rpx"
+        width="456rpx"
+        height="730rpx"
         src="/static/icon/ring.png"
       ></u-image>
 
       <u-image
         class="phone-image"
-        width="318rpx"
-        height="418rpx"
+        width="500rpx"
+        height="600rpx"
         src="/static/icon/phone.png"
       ></u-image>
 
@@ -607,27 +607,27 @@ export default {
 
         10% {
           opacity: 0.2;
-          right: 0rpx;
+          right: -100rpx;
         }
 
         30% {
           opacity: 1;
-          right: 0rpx;
+          right: -100rpx;
         }
 
         40% {
           opacity: 1;
-          right: 100rpx;
+          right: 0;
         }
 
         80% {
           opacity: 1;
-          right: 100rpx;
+          right: 0;
         }
 
         100% {
           opacity: 0;
-          right: 100rpx;
+          right: 0;
         }
       }
     }
