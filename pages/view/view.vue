@@ -2,27 +2,31 @@
   <view class="view-container">
     <NavBar bgColor="transparent"></NavBar>
 
-    <view class="view-content u-padding-35">
-      <scroll-view
-        scroll-y="true"
-        class="view-scroll"
+    <scroll-view
+      scroll-y="true"
+      class="view-scroll"
+    >
+      <rich-text
+        v-if="showMode === 'text'"
+        :nodes="showMessage"
+        class="rich-text"
+        style="white-space: pre-wrap;"
+      ></rich-text>
+      <view
+        v-if="showMode === 'notice' && flag"
+        class="notice-content"
       >
-        <u-parse
-          v-if="showMode === 'text'"
-          :html="showMessage"
-        ></u-parse>
         <u-notice-bar
           class="notice-bar"
-          v-if="showMode === 'notice' && falg"
           showMode="horizontal"
           :volume-icon="false"
           :bg-color="'transparent'"
           :color="'#37342B'"
-          :font-size="100"
+          :font-size="isLandscape ? 100 : 50"
           :list="[showMessage]"
         ></u-notice-bar>
-      </scroll-view>
-    </view>
+      </view>
+    </scroll-view>
 
     <u-image
       v-if="getUrl"
@@ -41,15 +45,15 @@ import { mapState } from 'vuex'
 export default {
   data() {
     return {
-      WHITE: require('@/static/images/WHITE.jpg'),
-      JIM: require('@/static/images/JIM.jpg'),
-      SILVER: require('@/static/images/SILVER.jpg'),
+      WHITE: require('@/static/images/WHITE_w.jpg'),
+      JIM: require('@/static/images/JIM_w.jpg'),
+      SILVER: require('@/static/images/SILVER_w.jpg'),
       BLUE: require('@/static/images/BLUE.jpg'),
       MWE: require('@/static/images/MWE.png'),
       PURPLE: require('@/static/images/PURPLE.jpg'),
       SPRING: require('@/static/images/SPRING.jpg'),
 
-      falg: false,
+      flag: false,
       showMessage: '',
       showBackground: '',
       showMode: '',
@@ -62,28 +66,21 @@ export default {
   computed: {
     ...mapState('content', ['message', 'background', 'mode']),
     getUrl() {
-      // 根据背景类型返回对应的图片路径
-      return this.showBackground === 'MWE'
-        ? this.MWE
-        : this.showBackground === 'BLUE'
-          ? this.BLUE
-          : this.showBackground === 'PURPLE'
-            ? this.PURPLE
-            : this.showBackground === 'SPRING'
-              ? this.SPRING
-              : this.showBackground === 'WHITE'
-                ? this.WHITE
-                : this.showBackground === 'JIM'
-                  ? this.JIM
-                  : this.showBackground === 'SILVER'
-                    ? this.SILVER
-                    : ''
+      const backgrounds = {
+        MWE: this.MWE,
+        BLUE: this.BLUE,
+        PURPLE: this.PURPLE,
+        SPRING: this.SPRING,
+        WHITE: this.WHITE,
+        JIM: this.JIM,
+        SILVER: this.SILVER,
+      };
+      const url = backgrounds[this.showBackground] || '';
+      return url || '';
     },
   },
   onLoad() {
-    console.log('message:', this.message);
-    console.log('background:', this.background);
-    console.log('mode:', this.mode);
+    this.checkOrientation();
     this.showMessage = this.message;
     this.showBackground = this.background;
     this.showMode = this.mode;
@@ -91,44 +88,60 @@ export default {
   onShow() {
     uni.onWindowResize((res) => {
       console.log('Window resized:', res);
-      this.falg = false;
+      this.checkOrientation()
+      this.flag = false;
       this.$nextTick(() => {
-        this.falg = true;
+        this.flag = true;
       });
     });
   },
-  methods: {},
+  methods: {
+    checkOrientation() {
+      const { windowWidth, windowHeight } = uni.getSystemInfoSync()
+      this.isLandscape = windowWidth > windowHeight
+    }
+  },
   onUnload() { },
   onReady() {
     setTimeout(() => {
-      this.falg = false;
+      this.flag = true;
     }, 1000);
   }
 }
 </script>
 <style lang="scss" scoped>
+@function tovmin($rpx) {
+  //$rpx为需要转换的字号
+  @return #{$rpx * 100 / 750}vmin;
+}
+
 .view-container {
   width: 100vw;
   height: 100vh;
+  position: relative;
+  overflow: hidden;
 
-  .view-content {
-    height: 100%;
+  .view-scroll {
     width: 100%;
-    padding: 15% 20rpx;
+    height: 70%;
+    top: 50%;
+    transform: translateY(-50%);
     position: absolute;
-    left: 0;
-    top: 0;
+    padding: tovmin(32);
+    box-sizing: border-box;
+  }
 
-    .view-scroll {
-      width: 100%;
-      height: 100%;
-      margin-top: 10%;
-    }
+  .notice-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
 
     .notice-bar {
       width: 100%;
-      margin-top: 50%;
+      top: 50%;
       transform: translateY(-50%);
+      position: absolute;
+      // font-size: tovmin(100);
     }
   }
 
