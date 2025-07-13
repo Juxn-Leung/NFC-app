@@ -52,6 +52,10 @@
         data-name="italic"
       ></i>
       <i
+        :class="'iconfont icon-zitixiahuaxian ' + (formats.underline ? 'ql-active' : '')"
+        data-name="underline"
+      ></i>
+      <i
         :class="'iconfont icon-zuoduiqi ' + (formats.align === 'left' ? 'ql-active' : '')"
         data-name="align"
         data-value="left"
@@ -100,11 +104,11 @@
         data-name="fontFamily"
         data-value="Pacifico"
       ></i>
-      <i
+      <!-- <i
         :class="'iconfont icon-fontsize ' + (formats.fontSize === '24px' ? 'ql-active' : '')"
         data-name="fontSize"
         data-value="24px"
-      ></i>
+      ></i> -->
       <i
         class="iconfont icon-text_color"
         :style="'color: ' + fontColor"
@@ -119,10 +123,10 @@
         :data-value="fontBg"
         @tap="open2"
       ></i>
-      <i
+      <!-- <i
         class="iconfont icon-date"
         @tap="insertDate"
-      ></i>
+      ></i> -->
       <!-- <i
         class="iconfont icon-undo"
         @tap="undo"
@@ -130,10 +134,6 @@
       <i
         class="iconfont icon-redo"
         @tap="redo"
-      ></i> -->
-      <!-- <i
-        :class="'iconfont icon-zitixiahuaxian ' + (formats.underline ? 'ql-active' : '')"
-        data-name="underline"
       ></i> -->
       <!-- <i
         class="iconfont icon--checklist"

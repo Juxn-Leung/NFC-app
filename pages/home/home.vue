@@ -239,7 +239,7 @@ export default {
 
       nfcMessage: '没有NFC标签',
 
-      messages: '', // 消息内容
+      messages: '<h1><strong>你好</strong>，<u>欢迎使用</u><u style="color: rgb(230, 0, 0);">Fidelity</u></h1>', // 消息内容
       background: 'WHITE', // 背景 星空蓝（BLUE）、梦幻粉（MWE）、魅力紫（PURPLE）
       music: '', // 音乐地址
       mode: 'text',
