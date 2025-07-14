@@ -48,10 +48,6 @@ export default {
       WHITE: require('@/static/images/WHITE_w.jpg'),
       JIM: require('@/static/images/JIM_w.jpg'),
       SILVER: require('@/static/images/SILVER_w.jpg'),
-      BLUE: require('@/static/images/BLUE.jpg'),
-      MWE: require('@/static/images/MWE.png'),
-      PURPLE: require('@/static/images/PURPLE.jpg'),
-      SPRING: require('@/static/images/SPRING.jpg'),
 
       flag: false,
       showMessage: '',
@@ -67,10 +63,6 @@ export default {
     ...mapState('content', ['message', 'background', 'mode']),
     getUrl() {
       const backgrounds = {
-        MWE: this.MWE,
-        BLUE: this.BLUE,
-        PURPLE: this.PURPLE,
-        SPRING: this.SPRING,
         WHITE: this.WHITE,
         JIM: this.JIM,
         SILVER: this.SILVER,

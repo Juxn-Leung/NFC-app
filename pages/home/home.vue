@@ -93,7 +93,8 @@
               @click="
                 () => {
                   showModes = true
-                }"
+                }
+              "
             >
               <u-image
                 src="/static/icon/text.png"
@@ -109,12 +110,13 @@
               @click="
                 () => {
                   showModes = true
-                }"
+                }
+              "
             >
               <u-notice-bar
                 mode="horizontal"
                 :volume-icon="false"
-                style="width: 100%;"
+                style="width: 100%"
                 :list="['滚动展示']"
               ></u-notice-bar>
             </view>
@@ -216,10 +218,6 @@ export default {
       WHITE: require('@/static/images/WHITE_w.jpg'),
       JIM: require('@/static/images/JIM_w.jpg'),
       SILVER: require('@/static/images/SILVER_w.jpg'),
-      BLUE: require('@/static/images/BLUE.jpg'),
-      MWE: require('@/static/images/MWE.png'),
-      PURPLE: require('@/static/images/PURPLE.jpg'),
-      SPRING: require('@/static/images/SPRING.jpg'),
 
       modesList: [
         { name: '文字展示', value: 'text' },
@@ -239,7 +237,8 @@ export default {
 
       nfcMessage: '没有NFC标签',
 
-      messages: '<h1><strong>你好</strong>，<u>欢迎使用</u><u style="color: rgb(230, 0, 0);">Fidelity</u></h1>', // 消息内容
+      messages:
+        '<h1><strong>你好</strong>，<u>欢迎使用</u><u style="color: rgb(230, 0, 0);">Fidelity</u></h1>', // 消息内容
       background: 'WHITE', // 背景 星空蓝（BLUE）、梦幻粉（MWE）、魅力紫（PURPLE）
       music: '', // 音乐地址
       mode: 'text',
@@ -265,40 +264,28 @@ export default {
   computed: {
     getUrl() {
       // 根据背景类型返回对应的图片路径
-      return this.editBackground === 'MWE'
-        ? this.MWE
-        : this.editBackground === 'BLUE'
-          ? this.BLUE
-          : this.editBackground === 'PURPLE'
-            ? this.PURPLE
-            : this.editBackground === 'SPRING'
-              ? this.SPRING
-              : this.editBackground === 'WHITE'
-                ? this.WHITE
-                : this.editBackground === 'JIM'
-                  ? this.JIM
-                  : this.editBackground === 'SILVER'
-                    ? this.SILVER
-                    : ''
+      return this.editBackground === 'WHITE'
+        ? this.WHITE
+        : this.editBackground === 'JIM'
+          ? this.JIM
+          : this.editBackground === 'SILVER'
+            ? this.SILVER
+            : ''
     },
     bgList() {
       return [
         { name: '白', value: 'WHITE', image: this.WHITE },
         { name: '银', value: 'SILVER', image: this.SILVER },
         { name: '金', value: 'JIM', image: this.JIM },
-        { name: '梦幻粉', value: 'MWE', image: this.MWE },
-        { name: '星空蓝', value: 'BLUE', image: this.BLUE },
-        { name: '魅力紫', value: 'PURPLE', image: this.PURPLE },
-        { name: '春日绿', value: 'SPRING', image: this.SPRING },
       ]
     },
   },
   onLoad() {
-    console.log('onLoad');
-    this.nfcInfo();
+    console.log('onLoad')
+    this.nfcInfo()
   },
   onShow() {
-    this.nfcStatus = true;
+    this.nfcStatus = true
     // 页面显示时，检查是否有存储的消息内容
     this.userInfo = uni.getStorageSync('userInfo')
     console.log('获取到的用户信息:', this.userInfo)
@@ -344,13 +331,12 @@ export default {
                 uni.navigateTo({
                   url: '/pages/view/view',
                   success: () => {
-                    this.nfcStatus = false;
+                    this.nfcStatus = false
                   },
                 })
               }
             }
           })
-
         } else {
           console.log('未发现 NDEF 消息')
           wx.showToast({
@@ -430,7 +416,9 @@ export default {
           id: str2ab('message'), // 读写内容
           tnf: 1,
           type: str2ab('T'),
-          payload: str2ab(this.mode === 'text' ? this.editMessages : this.noticeMessage),
+          payload: str2ab(
+            this.mode === 'text' ? this.editMessages : this.noticeMessage
+          ),
         },
         {
           id: str2ab('background'), // 读写内容
@@ -483,7 +471,7 @@ export default {
       uni.navigateTo({
         url: '/pages/view/view',
         success: () => {
-          this.nfcStatus = false;
+          this.nfcStatus = false
         },
       })
     },
@@ -507,7 +495,7 @@ export default {
           },
         })
       }
-    }
+    },
   },
   onUnload() {
     // 停止监听 NFC 标签
@@ -698,11 +686,11 @@ export default {
     .button {
       width: 180rpx;
       height: 72rpx;
-      border: 1px solid #37342B;
+      border: 1px solid #37342b;
       border-radius: 36rpx;
       text-align: center;
       line-height: 68rpx;
-      color: #37342B;
+      color: #37342b;
       font-size: 36rpx;
       margin: 0 16rpx;
     }
@@ -714,8 +702,8 @@ export default {
     }
 
     .button.primary {
-      background: #37342B;
-      color: #F8E49D;
+      background: #37342b;
+      color: #f8e49d;
       border: none;
       list-style: 72rpx;
     }
@@ -780,7 +768,7 @@ export default {
   transform: translateX(-50%);
   width: 594rpx;
   height: 100rpx;
-  background: linear-gradient(360deg, #23221E 0%, #37342B 100%);
+  background: linear-gradient(360deg, #23221e 0%, #37342b 100%);
   border-radius: 200rpx 200rpx 200rpx 200rpx;
   display: flex;
   justify-content: center;
@@ -792,7 +780,7 @@ export default {
     font-family: Source Han Sans CN, Source Han Sans CN;
     font-weight: bold;
     font-size: 32rpx;
-    color: #F8E49D;
+    color: #f8e49d;
     text-align: center;
     font-style: normal;
     text-transform: none;
