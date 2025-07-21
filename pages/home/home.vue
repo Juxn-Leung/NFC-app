@@ -287,10 +287,23 @@ export default {
   onShow() {
     this.nfcStatus = true
     // 页面显示时，检查是否有存储的消息内容
-    this.userInfo = uni.getStorageSync('userInfo')
+    const userinfo = uni.getStorageSync('userInfo')
     console.log('获取到的用户信息:', this.userInfo)
+    if (userinfo) {
+      this.userInfo = userinfo
+    } else {
+      this.login()
+    }
   },
   methods: {
+    async login() {
+      try {
+        const data = this.$apis.login();
+        console.log('登录数据:', data)
+      } catch (error) {
+        console.log('登录失败:', error)
+      }
+    },
     nfcInfo() {
       // 获取NFC实例
       this.nfc = wx.getNFCAdapter()
