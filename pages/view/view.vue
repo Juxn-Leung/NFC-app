@@ -112,6 +112,7 @@ export default {
   height: 100vh;
   position: relative;
   overflow: hidden;
+  font-family: 'LiShu';
 
   .view-scroll {
     width: 100%;

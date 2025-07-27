@@ -520,6 +520,7 @@ export default {
 .home {
   width: 100vw;
   height: 100vh;
+  font-family: 'LiShu';
 
   .home-content {
     width: 100%;
