@@ -1,16 +1,6 @@
 @import './mixins.scss';
 @import './var.scss';
 
-@font-face {
-  font-family: 'LiShu';
-  font-weight: 400;
-  src: url('https://appoint-1312673561.cos.ap-nanjing.myqcloud.com/Lishu/HYf3gj.woff2')
-      format('woff2'),
-    url('https://appoint-1312673561.cos.ap-nanjing.myqcloud.com/Lishu/HYf3gj.woff')
-      format('woff');
-  font-display: swap;
-}
-
 page,
 .page,
 body {

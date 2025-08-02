@@ -3,6 +3,16 @@ export default {
   methods: {},
   onLaunch: function () {
     console.log('App Launch')
+    // uni.loadFontFace({
+    //   family: 'PingFangQingChunTi',
+    //   source: 'url("https://fyzs.hwqnb.top/PingFangQingChunTi-2.ttf")',
+    //   success() {
+    //     console.log('字体加载成功');
+    //   },
+    //   fail(err) {
+    //     console.log('字体加载失败', err);
+    //   }
+    // });
     // uni.setStorageSync('userInfo', {
     //   name: '',
     //   phone: '',

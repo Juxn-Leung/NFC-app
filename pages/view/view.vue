@@ -102,6 +102,14 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@font-face {
+  font-family: 'PingFangQingChunTi';
+  font-weight: 400;
+  src: url('https://fyzs.hwqnb.top/PingFangQingChunTi-2.ttf') format('truetype');
+  // src: url('../../static/PingFangQingChunTi-2.ttf');
+  font-display: swap;
+}
+
 @function tovmin($rpx) {
   //$rpx为需要转换的字号
   @return #{$rpx * 100 / 750}vmin;
@@ -112,7 +120,7 @@ export default {
   height: 100vh;
   position: relative;
   overflow: hidden;
-  font-family: 'LiShu';
+  font-family: 'PingFangQingChunTi';
 
   .view-scroll {
     width: 100%;
