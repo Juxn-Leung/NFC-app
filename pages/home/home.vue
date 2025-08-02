@@ -22,6 +22,12 @@
 
       <text class="container-text">将手机背面靠近戒指</text>
 
+      <u-button
+        type="primary"
+        open-type="getPhoneNumber"
+        @getphonenumber="getPhoneNumber"
+      >获取手机号</u-button>
+
       <view
         v-if="userInfo.status === 'registered'"
         class="btn-content"
@@ -254,6 +260,12 @@ export default {
       showEdit: false,
       showBackground: false,
       showModes: false,
+
+      decodePhoneParams: {
+        code: '',
+        encryptedData: '',
+        iv: '',
+      },
     }
   },
   components: {
@@ -487,6 +499,31 @@ export default {
           this.nfcStatus = false
         },
       })
+    },
+    getCode() {
+      uni.login({
+        provider: 'weixin',
+        success: loginRes => {
+          console.log('登录成功:', loginRes)
+          this.decodePhoneParams.code = loginRes.code
+        },
+      });
+    },
+
+    // 获取手机号
+    getPhoneNumber(e) {
+      this.getCode();
+      if (!this.decodePhoneParams.code || !e.detail.encryptedData) {
+        return false;
+      }
+      this.decodePhoneParams.encryptedData = e.detail.encryptedData;
+      this.decodePhoneParams.iv = e.detail.iv;
+      try {
+        const data = this.$apis.getPhone(this.decodePhoneParams);
+        console.log('登录数据:', data)
+      } catch (error) {
+        console.log('登录失败:', error)
+      }
     },
 
     handleHold() {
