@@ -23,6 +23,8 @@
       <text class="container-text">将手机背面靠近戒指</text>
 
       <u-button
+        v-if="!userInfo.phone"
+        class="btn-content"
         type="primary"
         open-type="getPhoneNumber"
         @getphonenumber="getPhoneNumber"
@@ -47,13 +49,13 @@
         <text class="text">编辑内容</text>
       </view>
 
-      <view
+      <!-- <view
         v-else
         class="btn-content"
         @click="handleRegister"
       >
         <text class="text">注册</text>
-      </view>
+      </view> -->
 
       <u-image
         class="popup-background"
@@ -260,12 +262,6 @@ export default {
       showEdit: false,
       showBackground: false,
       showModes: false,
-
-      decodePhoneParams: {
-        code: '',
-        encryptedData: '',
-        iv: '',
-      },
     }
   },
   components: {
@@ -500,27 +496,29 @@ export default {
         },
       })
     },
-    getCode() {
-      uni.login({
-        provider: 'weixin',
-        success: loginRes => {
-          console.log('登录成功:', loginRes)
-          this.decodePhoneParams.code = loginRes.code
-        },
-      });
-    },
 
     // 获取手机号
-    getPhoneNumber(e) {
-      this.getCode();
-      if (!this.decodePhoneParams.code || !e.detail.encryptedData) {
-        return false;
+    async getPhoneNumber(e) {
+      console.log('获取手机号:', e)
+      let decodePhoneParams = {
+        code: '',
+        encryptedData: e.detail.encryptedData,
+        iv: e.detail.iv,
       }
-      this.decodePhoneParams.encryptedData = e.detail.encryptedData;
-      this.decodePhoneParams.iv = e.detail.iv;
       try {
-        const data = this.$apis.getPhone(this.decodePhoneParams);
-        console.log('登录数据:', data)
+        await wx.login({
+          success: res => {
+            console.log('登录成功:', res)
+            if (res.code) {
+              decodePhoneParams.code = res.code
+              console.log('解码手机号参数:', decodePhoneParams)
+              const data = this.$apis.getPhone(decodePhoneParams);
+              console.log('登录数据:', data)
+            } else {
+              console.log('登录失败！' + res.errMsg)
+            }
+          }
+        })
       } catch (error) {
         console.log('登录失败:', error)
       }
