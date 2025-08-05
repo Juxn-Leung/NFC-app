@@ -1,5 +1,5 @@
 {
-  "appid": "wxacef4dc28273d64f",
+  "appid": "wx8e596e926cad1a62",
   "miniprogramRoot": "unpackage/dist/dev/mp-weixin",
   "cloudfunctionRoot": "./cloudfunctionTemplate/",
   "compileType": "miniprogram",
