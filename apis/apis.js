@@ -19,6 +19,11 @@ const apis = {
   getUserInfo(data) {
     return requestUtil.urlRequest('wx/user/userInfo', data, 'get')
   },
+
+  // 获取用户手机
+  getPhone(data) {
+    return requestUtil.urlRequest('/api/wechat/phone', data, 'POST')
+  },
 }
 
 export {
