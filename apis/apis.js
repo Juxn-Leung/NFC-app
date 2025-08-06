@@ -1,29 +1,27 @@
 import { requestUtil } from './index.js'
 
 const apis = {
-  login(data) {
-    return requestUtil.urlRequest('wx/user/login', data, 'post')
-  },
-  phoneLogin(data) {
-    return requestUtil.urlRequest('wx/user/checkSmsCode', data, 'post')
-  },
-  // 保存用户手机
-  saveUserPhone(data) {
-    return requestUtil.urlRequest('wx/user/phone', data, 'get')
-  },
-  // 保存用户信息
-  setUserInfo(data) {
-    return requestUtil.urlRequest('wx/user/userSave', data, 'post')
-  },
-  // 获取用户信息
-  getUserInfo(data) {
-    return requestUtil.urlRequest('wx/user/userInfo', data, 'get')
-  },
-
   // 获取用户手机
   getPhone(data) {
-    return requestUtil.urlRequest('/api/wechat/phone', data, 'POST')
+    return requestUtil.urlRequest(`/api/wechat/phone?code=${data}`, {}, 'POST')
   },
+  // 根據手機號碼獲取用戶信息
+  getByPhone(data) {
+    return requestUtil.urlRequest(`/api/wechat/wechat/getByPhone`, data, 'POST')
+  },
+  // 用戶註冊
+  wxRegister(data) {
+    return requestUtil.urlRequest(`/api/wechat/wechat/wxRegister`, data, 'POST')
+  },
+  patternList(data) {
+    return requestUtil.urlRequest(`/wx/pattern/list`, data, 'POST')
+  },
+  patternOne(data) {
+    return requestUtil.urlRequest(`/wx/pattern/one`, data, 'POST')
+  },
+  picList(data) {
+    return requestUtil.urlRequest(`/wx/pic/list`, data, 'POST')
+  }
 }
 
 export {

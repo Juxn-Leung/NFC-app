@@ -296,17 +296,19 @@ export default {
     this.nfcStatus = true
     // 页面显示时，检查是否有存储的消息内容
     const userinfo = uni.getStorageSync('userInfo')
-    console.log('获取到的用户信息:', this.userInfo)
     if (userinfo) {
       this.userInfo = userinfo
-    } else {
-      this.login()
+    }
+    if (userinfo.phone) {
+      this.login(userinfo.phone)
     }
   },
   methods: {
-    async login() {
+    async login(phone) {
       try {
-        const data = this.$apis.login();
+        const data = await this.$apis.getByPhone({
+          phone
+        });
         console.log('登录数据:', data)
       } catch (error) {
         console.log('登录失败:', error)
@@ -499,28 +501,13 @@ export default {
 
     // 获取手机号
     async getPhoneNumber(e) {
-      console.log('获取手机号:', e)
-      let decodePhoneParams = {
-        code: '',
-        encryptedData: e.detail.encryptedData,
-        iv: e.detail.iv,
-      }
       try {
-        await wx.login({
-          success: res => {
-            console.log('登录成功:', res)
-            if (res.code) {
-              decodePhoneParams.code = res.code
-              console.log('解码手机号参数:', decodePhoneParams)
-              const data = this.$apis.getPhone(decodePhoneParams);
-              console.log('登录数据:', data)
-            } else {
-              console.log('登录失败！' + res.errMsg)
-            }
-          }
-        })
+        const data = await this.$apis.getPhone(e.detail.code);
+        this.userInfo.phone = data.phone
+        this.login(data.phone)
       } catch (error) {
-        console.log('登录失败:', error)
+        console.error('获取手机号失败:', error)
+        return
       }
     },
 

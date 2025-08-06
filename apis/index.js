@@ -1,6 +1,6 @@
 const requestUtil = {
-  appId: 'wx695ff6c8b81fc8e3',
-  apiurl: 'https://fyzs.hwqnb.top/',
+  appId: 'wx8e596e926cad1a62',
+  apiurl: 'https://fyzs.hwqnb.top/fidelityApi',
   // 参数： url: 接口路径  param：请求参数  methods：请求方式 callBack：回调函数
   urlRequest: function (url, params, methods) {
     return new Promise((resolve, reject) => {
