@@ -35,6 +35,7 @@
         class="btn-content"
         @click="
           () => {
+            getBackgroundList()
             showEdit = true
             editBackground = background
             editMode = mode
@@ -81,7 +82,7 @@
             <view class="select-image">
               <u-image
                 v-if="editBackground"
-                :src="getUrl"
+                :src="formatImageUrl(editBackground)"
                 width="144rpx"
                 height="256rpx"
                 mode="aspectFill"
@@ -179,17 +180,17 @@
           <u-radio
             v-for="(item, index) in bgList"
             :key="index"
-            :name="item.value"
+            :name="item.picId"
           >
             <view>
               <u-image
-                v-if="item.image"
-                :src="item.image"
+                v-if="item.picId"
+                :src="formatImageUrl(item.picId)"
                 width="54px"
                 height="96px"
                 mode="aspectFill"
               ></u-image>
-              <text>{{ item.name }}</text>
+              <text>{{ item.picName }}</text>
             </view>
           </u-radio>
         </u-radio-group>
@@ -219,6 +220,7 @@
 import { parseNdefRecord, str2ab } from '@/utils/record.js'
 import EditorContent from '@/components/Editor/index.vue'
 import NavBar from '@/components/NavBar/index.vue'
+import { requestUtil } from '@/apis/index.js'
 
 export default {
   data() {
@@ -226,6 +228,8 @@ export default {
       WHITE: require('@/static/images/WHITE_w.jpg'),
       JIM: require('@/static/images/JIM_w.jpg'),
       SILVER: require('@/static/images/SILVER_w.jpg'),
+
+      bgList: [],
 
       modesList: [
         { name: '文字展示', value: 'text' },
@@ -269,25 +273,7 @@ export default {
     EditorContent,
   },
   watch: {},
-  computed: {
-    getUrl() {
-      // 根据背景类型返回对应的图片路径
-      return this.editBackground === 'WHITE'
-        ? this.WHITE
-        : this.editBackground === 'JIM'
-          ? this.JIM
-          : this.editBackground === 'SILVER'
-            ? this.SILVER
-            : ''
-    },
-    bgList() {
-      return [
-        { name: '白', value: 'WHITE', image: this.WHITE },
-        { name: '银', value: 'SILVER', image: this.SILVER },
-        { name: '金', value: 'JIM', image: this.JIM },
-      ]
-    },
-  },
+  computed: {},
   onLoad() {
     console.log('onLoad')
     this.nfcInfo()
@@ -310,19 +296,33 @@ export default {
           userPhone: phone
         });
         if (data && data.id) {
-          const { userName, userPhone, wxUserStatus } = data
+          const { userName, userPhone, userStatus } = data
           this.userInfo = {
             name: userName,
             phone: userPhone,
-            status: wxUserStatus === 0 ? 'unReview' : wxUserStatus === 1 ? 'reviewed' : wxUserStatus === 2 ? 'rejected' : 'unregistered'
+            status: userStatus === 0 ? 'unReview' : userStatus === 1 ? 'registered' : userStatus === 2 ? 'invalid' : 'unregistered'
           }
-          uni.setStorageSync('userInfo', data)
+          uni.setStorageSync('userInfo', this.userInfo)
         } else {
           this.userInfo.status = 'unregistered'
         }
         console.log('登录数据:', data)
       } catch (error) {
         console.log('登录失败:', error)
+      }
+    },
+    async getBackgroundList() {
+      try {
+        const { data } = await this.$apis.picList({
+          pageNo: 1,
+          pageSize: 999,
+          picStatus: 1
+        });
+        console.log('数据:', data)
+        // Vue2 响应式赋值方式
+        this.$set(this, 'bgList', data.records || []);
+      } catch (error) {
+        console.log('失败:', error)
       }
     },
     nfcInfo() {
@@ -521,6 +521,12 @@ export default {
         console.error('获取手机号失败:', error)
         return
       }
+    },
+
+    // 格式化图片
+    formatImageUrl(id) {
+      if (!id) return ''
+      return `${requestUtil.apiurl}/api/file/${id}` // 替换为实际的图片服务器地址
     },
 
     handleHold() {
