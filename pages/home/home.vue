@@ -49,13 +49,13 @@
         <text class="text">编辑内容</text>
       </view>
 
-      <!-- <view
-        v-else
+      <view
+        v-if="userInfo.phone && userInfo.status === 'unregistered'"
         class="btn-content"
         @click="handleRegister"
       >
         <text class="text">注册</text>
-      </view> -->
+      </view>
 
       <u-image
         class="popup-background"
@@ -306,9 +306,20 @@ export default {
   methods: {
     async login(phone) {
       try {
-        const data = await this.$apis.getByPhone({
-          phone
+        const { data } = await this.$apis.getByPhone({
+          userPhone: phone
         });
+        if (data && data.id) {
+          const { userName, userPhone, wxUserStatus } = data
+          this.userInfo = {
+            name: userName,
+            phone: userPhone,
+            status: wxUserStatus === 0 ? 'unReview' : wxUserStatus === 1 ? 'reviewed' : wxUserStatus === 2 ? 'rejected' : 'unregistered'
+          }
+          uni.setStorageSync('userInfo', data)
+        } else {
+          this.userInfo.status = 'unregistered'
+        }
         console.log('登录数据:', data)
       } catch (error) {
         console.log('登录失败:', error)
@@ -502,9 +513,10 @@ export default {
     // 获取手机号
     async getPhoneNumber(e) {
       try {
-        const data = await this.$apis.getPhone(e.detail.code);
-        this.userInfo.phone = data.phone
-        this.login(data.phone)
+        const { data } = await this.$apis.getPhone(e.detail.code);
+        this.userInfo.phone = data
+        uni.setStorageSync('userInfo', this.userInfo)
+        this.login(data)
       } catch (error) {
         console.error('获取手机号失败:', error)
         return

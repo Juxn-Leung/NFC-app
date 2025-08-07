@@ -26,8 +26,11 @@
         </u-form-item>
       </u-form>
 
-      <view class="btn-content u-margin-top-60">
-        <text @click="submit">提交</text>
+      <view
+        class="btn-content u-margin-top-60"
+        @click="submit"
+      >
+        <text>提交</text>
       </view>
     </view>
 
@@ -89,22 +92,31 @@ export default {
   computed: {},
   onLoad() { },
   methods: {
-    submit() {
-      this.$refs.uForm.validate((valid) => {
-        if (valid) {
-          // 提交表单逻辑
-          this.$refs.uToast.show({
-            title: '提交成功',
-            type: 'success',
-            url: '/pages/home/home'
-          })
-          uni.setStorageSync('userInfo', {
-            name: this.form.name,
-            phone: this.form.phone,
-            status: 'registered' // 假设已注册
-          });
+    async submit() {
+      try {
+        const res = await this.$refs.uForm.validate();
+        if (!res) {
+          return;
         }
-      });
+        const data = await this.$apis.wxRegister({
+          userPhone: this.form.phone,
+          userName: this.form.name,
+        });
+        // 提交表单逻辑
+        uni.setStorageSync('userInfo', {
+          name: this.form.name,
+          phone: this.form.phone,
+          status: 'unReview' // 待审核
+        });
+        this.$refs.uToast.show({
+          title: '提交成功',
+          type: 'success',
+          url: '/pages/home/home'
+        })
+        console.log('数据:', data)
+      } catch (error) {
+        console.log('注册失败:', error)
+      }
     }
   },
   onUnload() { },

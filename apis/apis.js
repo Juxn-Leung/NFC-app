@@ -7,11 +7,11 @@ const apis = {
   },
   // 根據手機號碼獲取用戶信息
   getByPhone(data) {
-    return requestUtil.urlRequest(`/api/wechat/wechat/getByPhone`, data, 'POST')
+    return requestUtil.urlRequest(`/api/wechat/getByPhone`, data, 'POST')
   },
   // 用戶註冊
   wxRegister(data) {
-    return requestUtil.urlRequest(`/api/wechat/wechat/wxRegister`, data, 'POST')
+    return requestUtil.urlRequest(`/api/wechat/wxRegister`, data, 'POST')
   },
   patternList(data) {
     return requestUtil.urlRequest(`/wx/pattern/list`, data, 'POST')
