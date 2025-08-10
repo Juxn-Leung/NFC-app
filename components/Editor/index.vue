@@ -292,6 +292,18 @@ export default {
     }
   },
   props: ["editorDetail"],
+  watch: {
+    editorDetail: {
+      immediate: true,
+      handler(val) {
+        if (val && this.editorCtx) {
+          this.editorCtx.setContents({
+            html: val
+          });
+        }
+      }
+    }
+  },
   onLoad() { },
   methods: {
     // 失去焦点时，获取富文本的内容

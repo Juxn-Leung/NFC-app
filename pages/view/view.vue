@@ -29,11 +29,11 @@
     </scroll-view>
 
     <u-image
-      v-if="getUrl"
+      v-if="formatImageUrl(showBackground)"
       class="popup-background"
       width="100%"
       height="100%"
-      :src="getUrl"
+      :src="formatImageUrl(showBackground)"
       mode="aspectFill"
     ></u-image>
   </view>
@@ -42,13 +42,10 @@
 <script>
 import NavBar from '@/components/NavBar/index.vue'
 import { mapState } from 'vuex'
+import { requestUtil } from '@/apis/index.js'
 export default {
   data() {
     return {
-      WHITE: require('@/static/images/WHITE_w.jpg'),
-      JIM: require('@/static/images/JIM_w.jpg'),
-      SILVER: require('@/static/images/SILVER_w.jpg'),
-
       flag: false,
       showMessage: '',
       showBackground: '',
@@ -61,15 +58,6 @@ export default {
   watch: {},
   computed: {
     ...mapState('content', ['message', 'background', 'mode']),
-    getUrl() {
-      const backgrounds = {
-        WHITE: this.WHITE,
-        JIM: this.JIM,
-        SILVER: this.SILVER,
-      };
-      const url = backgrounds[this.showBackground] || '';
-      return url || '';
-    },
   },
   onLoad() {
     this.checkOrientation();
@@ -91,7 +79,13 @@ export default {
     checkOrientation() {
       const { windowWidth, windowHeight } = uni.getSystemInfoSync()
       this.isLandscape = windowWidth > windowHeight
-    }
+    },
+    // 格式化图片
+    formatImageUrl(id) {
+      console.log('图片ID:', id)
+      if (!id) return ''
+      return `${requestUtil.apiurl}/api/file/${id}` // 替换为实际的图片服务器地址
+    },
   },
   onUnload() { },
   onReady() {
@@ -102,14 +96,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@font-face {
-  font-family: 'PingFangQingChunTi';
-  font-weight: 400;
-  src: url('https://fyzs.hwqnb.top/PingFangQingChunTi-2.ttf') format('truetype');
-  // src: url('../../static/PingFangQingChunTi-2.ttf');
-  font-display: swap;
-}
-
 @function tovmin($rpx) {
   //$rpx为需要转换的字号
   @return #{$rpx * 100 / 750}vmin;
@@ -142,7 +128,10 @@ export default {
       top: 50%;
       transform: translateY(-50%);
       position: absolute;
-      // font-size: tovmin(100);
+
+      :deep(.u-notice-content) {
+        text-align: left !important;
+      }
     }
   }
 

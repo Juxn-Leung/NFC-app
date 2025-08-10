@@ -56,6 +56,10 @@ body {
   @include box-shadow(0, 10rpx, 20rpx, 0rpx, rgba(130, 198, 234, 0.21));
 }
 
+.u-notice-content {
+  text-align: left !important;
+}
+
 // .btn-container {
 //   width: 100%;
 // }

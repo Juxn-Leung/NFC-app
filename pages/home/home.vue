@@ -22,13 +22,14 @@
 
       <text class="container-text">将手机背面靠近戒指</text>
 
-      <u-button
+      <button
         v-if="!userInfo.phone"
         class="btn-content"
-        type="primary"
         open-type="getPhoneNumber"
         @getphonenumber="getPhoneNumber"
-      >获取手机号</u-button>
+      >
+        <text class="text">获取手机号</text>
+      </button>
 
       <view
         v-if="userInfo.status === 'registered'"
@@ -36,6 +37,7 @@
         @click="
           () => {
             getBackgroundList()
+            getPatternList()
             showEdit = true
             editBackground = background
             editMode = mode
@@ -48,6 +50,17 @@
         "
       >
         <text class="text">编辑内容</text>
+      </view>
+
+      <view
+        class="unReview-text"
+        v-if="userInfo.status === 'unReview'"
+      >
+        审批中，请耐心等待
+        <text
+          class="unReview-text-btn"
+          @click="getInfo"
+        >{{ tips }}</text>
       </view>
 
       <view
@@ -78,6 +91,13 @@
           scroll-y="true"
           style="height: 80%; margin-top: 20%"
         >
+          <view
+            class="popup-pick"
+            @click="() => {
+              showPattern = true
+            }"
+          >应用款式：<text>{{ patternName }}</text></view>
+
           <view class="popup-select">
             <view class="select-image">
               <u-image
@@ -213,6 +233,23 @@
         </u-radio-group>
       </view>
     </u-modal>
+
+    <u-select
+      v-model="showPattern"
+      :list="patternList"
+      title="选择款式"
+      :label-name="'patternName'"
+      :value-name="'id'"
+      @confirm="handleSelectPattern"
+    ></u-select>
+
+    <u-verification-code
+      ref="uCode"
+      :seconds="60"
+      start-text="刷新"
+      end-text="刷新"
+      @change="tipsChange"
+    ></u-verification-code>
   </view>
 </template>
 
@@ -225,16 +262,16 @@ import { requestUtil } from '@/apis/index.js'
 export default {
   data() {
     return {
-      WHITE: require('@/static/images/WHITE_w.jpg'),
-      JIM: require('@/static/images/JIM_w.jpg'),
-      SILVER: require('@/static/images/SILVER_w.jpg'),
-
+      tips: '',
       bgList: [],
+      patternList: [],
 
       modesList: [
         { name: '文字展示', value: 'text' },
         { name: '滚动展示', value: 'notice' },
       ],
+
+      patternName: '请选择',
 
       userInfo: {
         name: '',
@@ -249,15 +286,14 @@ export default {
 
       nfcMessage: '没有NFC标签',
 
-      messages:
-        '<h1><strong>你好</strong>，<u>欢迎使用</u><u style="color: rgb(230, 0, 0);">Fidelity</u></h1>', // 消息内容
-      background: 'WHITE', // 背景 星空蓝（BLUE）、梦幻粉（MWE）、魅力紫（PURPLE）
+      messages: '', // 消息内容
+      background: '', // 背景 
       music: '', // 音乐地址
       mode: 'text',
 
       editMessages: '',
       noticeMessage: '', // 滚动展示的消息内容
-      editBackground: 'WHITE',
+      editBackground: '',
       editMusic: '测试Music',
       editMode: 'text', // 编辑模式 text (文字展示)、notice (滚动展示)
 
@@ -266,6 +302,7 @@ export default {
       showEdit: false,
       showBackground: false,
       showModes: false,
+      showPattern: false
     }
   },
   components: {
@@ -280,16 +317,34 @@ export default {
   },
   onShow() {
     this.nfcStatus = true
-    // 页面显示时，检查是否有存储的消息内容
-    const userinfo = uni.getStorageSync('userInfo')
-    if (userinfo) {
-      this.userInfo = userinfo
-    }
-    if (userinfo.phone) {
-      this.login(userinfo.phone)
-    }
+    this.handleRefresh();
   },
   methods: {
+    tipsChange(text) {
+      this.tips = text;
+    },
+    getInfo() {
+      if (this.$refs.uCode.canGetCode) {
+        // 模拟向后端请求验证码
+        this.handleRefresh();
+        setTimeout(() => {
+          uni.hideLoading();
+          this.$refs.uCode.start();
+        }, 2000);
+      } else {
+        this.$u.toast('倒计时结束后再发送');
+      }
+    },
+    handleRefresh() {
+      // 页面显示时，检查是否有存储的消息内容
+      const userinfo = uni.getStorageSync('userInfo')
+      if (userinfo) {
+        this.userInfo = userinfo
+      }
+      if (userinfo.phone) {
+        this.login(userinfo.phone)
+      }
+    },
     async login(phone) {
       try {
         const { data } = await this.$apis.getByPhone({
@@ -300,7 +355,7 @@ export default {
           this.userInfo = {
             name: userName,
             phone: userPhone,
-            status: userStatus === 0 ? 'unReview' : userStatus === 1 ? 'registered' : userStatus === 2 ? 'invalid' : 'unregistered'
+            status: userStatus === 0 ? 'unReview' : userStatus === 1 ? 'registered' : userStatus === 2 ? 'unReview' : 'unregistered'
           }
           uni.setStorageSync('userInfo', this.userInfo)
         } else {
@@ -325,6 +380,45 @@ export default {
         console.log('失败:', error)
       }
     },
+    async getPatternList() {
+      try {
+        const { data } = await this.$apis.patternList({
+          pageNo: 1,
+          pageSize: 999,
+          patternStatus: 1
+        });
+        console.log('数据:', data)
+        // Vue2 响应式赋值方式
+        this.$set(this, 'patternList', data.records || []);
+      } catch (error) {
+        console.log('失败:', error)
+      }
+    },
+    async handleSelectPattern(pattern) {
+      if (Array.isArray(pattern) && pattern.length > 0) {
+        console.log('选择的款式:', pattern[0])
+        try {
+          const { data } = await this.$apis.patternOne({
+            id: pattern[0].value
+          });
+          console.log('数据:', data)
+          this.patternName = data.patternName
+          this.editBackground = data.backgroundId
+          if (data.patternMode === 'text') {
+            this.editMessages = data.patternContent
+            this.messages = data.patternContent
+            console.log('消息内容:', this.messages)
+          } else if (data.patternMode === 'notice') {
+            this.noticeMessage = data.patternContent
+          }
+          // this.messages = data.patternContent
+          this.editMode = data.patternMode
+        } catch (error) {
+          console.log('失败:', error)
+        }
+      }
+      this.showPattern = false
+    },
     nfcInfo() {
       // 获取NFC实例
       this.nfc = wx.getNFCAdapter()
@@ -344,16 +438,16 @@ export default {
                 console.log(`记录 ${recIndex + 1}:`, parsedRecord)
 
                 // 在界面上显示 id 为 content 的记录内容
-                if (parsedRecord.id === 'message') {
+                if (parsedRecord.id === 'message' && !this.showEdit) {
                   this.messages = parsedRecord.payload
                 }
                 // 如果记录类型是背景颜色，则设置背景颜色
-                if (parsedRecord.id === 'background') {
+                if (parsedRecord.id === 'background' && !this.showEdit) {
                   this.background = parsedRecord.payload
                 }
 
                 // 如果记录类型是模式，则设置编辑模式
-                if (parsedRecord.id === 'mode') {
+                if (parsedRecord.id === 'mode' && !this.showEdit) {
                   this.mode = parsedRecord.payload
                 }
               })
@@ -560,7 +654,6 @@ export default {
 .home {
   width: 100vw;
   height: 100vh;
-  font-family: 'LiShu';
 
   .home-content {
     width: 100%;
@@ -616,6 +709,23 @@ export default {
         }
       }
     }
+  }
+}
+
+.unReview-text {
+  position: absolute;
+  bottom: 172rpx;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-weight: 500;
+  font-size: 32rpx;
+
+  .unReview-text-btn {
+    color: #146eff;
+    cursor: pointer;
+    margin-left: 4rpx;
+
   }
 }
 
@@ -691,6 +801,24 @@ export default {
     }
   }
 
+  .popup-pick {
+    padding: 16rpx;
+    box-sizing: border-box;
+    position: relative;
+    width: 100%;
+    margin-bottom: 4rpx;
+
+    text {
+      padding: 6rpx 16rpx;
+      color: #ffcc14;
+      background: #fff6d5;
+      border: 1px solid #ffcc14;
+      font-weight: 500;
+      text-align: center;
+      border-radius: 16rpx;
+    }
+  }
+
   .popup-select {
     position: relative;
     width: 100%;
@@ -698,6 +826,7 @@ export default {
     display: flex;
 
     .select-image {
+      width: 150rpx;
       margin-right: 32rpx;
       border-radius: 16rpx;
       height: 256rpx;
@@ -829,8 +958,9 @@ export default {
   align-items: center;
 
   .text {
-    width: 128rpx;
+    width: 300rpx;
     height: 48rpx;
+    line-height: 48rpx;
     font-family: Source Han Sans CN, Source Han Sans CN;
     font-weight: bold;
     font-size: 32rpx;
