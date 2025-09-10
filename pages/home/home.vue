@@ -530,6 +530,7 @@ export default {
           id: str2ab('mini-ios'), // iOS小程序
           tnf: 1,
           type: str2ab('U'),
+          // payload: str2ab('weixin://dl/business/?appid=2088241412926203&path=page/home/home', [
           payload: str2ab('weixin://dl/business/?t=XTSkBZlzqmn&cq=a%3Dhello', [
             0,
           ]),
