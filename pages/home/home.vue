@@ -522,16 +522,41 @@ export default {
         },
       })
     },
-    onWrite() {
+    async onWrite() {
       const ndef = this.nfc.getNdef()
+      // let access_token = '';
+      // let nfcUrl = '';
+      // await wx.request({
+      //   url: "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx8e596e926cad1a62&secret=ee7fc228ee2ebc77f0660cee772d152a",
+      //   method: 'GET',
+      //   success: function (res) {
+      //     access_token = res.data.access_token
+      //   },
+      // })
+      // if (access_token) {
+      //   await wx.request({
+      //     url: "https://api.weixin.qq.com/wxa/generatenfcscheme?access_token=" + access_token,
+      //     data: {
+      //       model_id: "_0QXLl5NGLHaWso4auYF3g"
+      //     },
+      //     method: 'POST',
+      //     success: function (res) {
+      //       nfcUrl = res.data.openlink
+      //     },
+      //   })
+      // }
+
+      const msg = this.mode === 'text' ? this.editMessages : this.noticeMessage
+
+      console.log('写入的消息:', msg)
 
       const records = [
         {
           id: str2ab('mini-ios'), // iOS小程序
           tnf: 1,
           type: str2ab('U'),
-          // payload: str2ab('weixin://dl/business/?appid=2088241412926203&path=page/home/home', [
-          payload: str2ab('weixin://dl/business/?t=XTSkBZlzqmn&cq=a%3Dhello', [
+          // payload: str2ab('weixin://dl/business/?appid=2088241412926203&path=pages/home/home', [
+          payload: str2ab('weixin://dl/business/?t=s7jMnEVZdtv', [
             0,
           ]),
         },
@@ -545,9 +570,7 @@ export default {
           id: str2ab('message'), // 读写内容
           tnf: 1,
           type: str2ab('T'),
-          payload: str2ab(
-            this.mode === 'text' ? this.editMessages : this.noticeMessage
-          ),
+          payload: str2ab(msg),
         },
         {
           id: str2ab('background'), // 读写内容
