@@ -184,6 +184,10 @@
             @click="handleView"
           >预览</view>
           <view
+            class="button info"
+            @click="onCopy"
+          >复制</view>
+          <view
             class="button primary"
             @click="onWrite"
           >写入</view>
@@ -522,6 +526,19 @@ export default {
         },
       })
     },
+
+    async onCopy() {
+      uni.setClipboardData({
+        data: '123456',
+        success: res => {
+          wx.showToast({ title: '复制成功' })
+        },
+        fail: () => {
+          wx.showToast({ title: '复制失败', icon: 'none' })
+        }
+      })
+    },
+
     async onWrite() {
       const ndef = this.nfc.getNdef()
       // let access_token = '';
@@ -891,7 +908,7 @@ export default {
     transform: translateX(-50%);
 
     .button {
-      width: 180rpx;
+      width: 150rpx;
       height: 72rpx;
       border: 1px solid #37342b;
       border-radius: 36rpx;
@@ -911,6 +928,13 @@ export default {
     .button.primary {
       background: #37342b;
       color: #f8e49d;
+      border: none;
+      list-style: 72rpx;
+    }
+
+    .button.info {
+      background: #1F7ACC;
+      color: #fff;
       border: none;
       list-style: 72rpx;
     }

@@ -7,6 +7,8 @@ import { apis } from '@/apis/apis.js'
 import { utils } from '@/utils/util.js'
 import store from '@/store'
 import NavBar from "@/components/NavBar";
+import share from '@/utils/share.js'
+Vue.mixin(share)
 
 Vue.prototype.$store = store
 Vue.prototype.$apis = apis
