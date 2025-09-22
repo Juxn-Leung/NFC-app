@@ -21,7 +21,10 @@ const apis = {
   },
   picList(data) {
     return requestUtil.urlRequest(`/wx/pic/list`, data, 'POST')
-  }
+  },
+  generateLink(data) {
+    return requestUtil.urlRequest(`/api/wechat/generateLink`, data, 'POST')
+  },
 }
 
 export {

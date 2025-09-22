@@ -106,7 +106,7 @@ export default {
   height: 100vh;
   position: relative;
   overflow: hidden;
-  font-family: 'PingFangQingChunTi';
+  font-family: 'PingFangJiangNanTi';
 
   .view-scroll {
     width: 100%;

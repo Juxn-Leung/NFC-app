@@ -33,9 +33,9 @@ export default {
 @import "@/static/iconfont/iconfont.css";
 
 @font-face {
-  font-family: 'PingFangQingChunTi';
+  font-family: 'PingFangJiangNanTi';
   font-weight: 400;
-  src: url('https://www.fidelity.net.cn/PingFangQingChunTi-2.ttf') format('truetype');
+  src: url('https://www.fidelity.net.cn/PingFangJiangNanTi.ttf') format('truetype');
   font-display: swap;
 }
 </style>

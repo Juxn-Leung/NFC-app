@@ -278,6 +278,7 @@ export default {
       patternName: '请选择',
 
       userInfo: {
+        id: null,
         name: '',
         phone: '',
         status: '',
@@ -355,8 +356,9 @@ export default {
           userPhone: phone
         });
         if (data && data.id) {
-          const { userName, userPhone, userStatus } = data
+          const { userName, userPhone, userStatus, id } = data
           this.userInfo = {
+            id,
             name: userName,
             phone: userPhone,
             status: userStatus === 0 ? 'unReview' : userStatus === 1 ? 'registered' : userStatus === 2 ? 'unReview' : 'unregistered'
@@ -528,15 +530,28 @@ export default {
     },
 
     async onCopy() {
-      uni.setClipboardData({
-        data: '123456',
-        success: res => {
-          wx.showToast({ title: '复制成功' })
-        },
-        fail: () => {
-          wx.showToast({ title: '复制失败', icon: 'none' })
-        }
-      })
+      const msg = this.mode === 'text' ? this.editMessages : this.noticeMessage
+      try {
+        const { data } = await this.$apis.generateLink({
+          linkContent: msg,
+          mode: this.mode,
+          musicId: '',
+          picId: this.editBackground,
+          userId: this.userInfo.id
+        });
+        console.log('数据:', data)
+        uni.setClipboardData({
+          data: data,
+          success: res => {
+            wx.showToast({ title: '复制成功' })
+          },
+          fail: () => {
+            wx.showToast({ title: '复制失败', icon: 'none' })
+          }
+        })
+      } catch (error) {
+        console.log('失败:', error)
+      }
     },
 
     async onWrite() {
