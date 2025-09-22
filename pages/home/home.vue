@@ -530,7 +530,7 @@ export default {
     },
 
     async onCopy() {
-      const msg = this.mode === 'text' ? this.editMessages : this.noticeMessage
+      const msg = this.editMode === 'text' ? this.editMessages : this.noticeMessage
       try {
         const { data } = await this.$apis.generateLink({
           linkContent: msg,
@@ -578,8 +578,11 @@ export default {
       //   })
       // }
 
-      const msg = this.mode === 'text' ? this.editMessages : this.noticeMessage
+      const msg = this.editMode === 'text' ? this.editMessages : this.noticeMessage
 
+      console.log('editMode:', this.editMode)
+      console.log('editMessages:', this.editMessages)
+      console.log('noticeMessage:', this.noticeMessage)
       console.log('写入的消息:', msg)
 
       const records = [
