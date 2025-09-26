@@ -534,7 +534,7 @@ export default {
       try {
         const { data } = await this.$apis.generateLink({
           linkContent: msg,
-          mode: this.mode,
+          mode: this.editMode,
           musicId: '',
           picId: this.editBackground,
           userId: this.userInfo.id
@@ -627,9 +627,9 @@ export default {
         records: records,
         success() {
           wx.showToast({ title: '写入成功' })
-          if (this.mode === 'text') {
+          if (this.editMode === 'text') {
             this.messages = this.editMessages
-          } else if (this.mode === 'notice') {
+          } else if (this.editMode === 'notice') {
             this.messages = this.noticeMessage
           }
           this.editMessages = ''
