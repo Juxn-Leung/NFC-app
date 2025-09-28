@@ -30,6 +30,14 @@
       >
         <text class="text">获取手机号</text>
       </button>
+      <cc-protocolBox
+        v-if="!userInfo.phone"
+        class="btn-content2"
+        :agree="agree"
+        :protocolArr="protocolArr"
+        @click="agree = !agree"
+        @protocolClick="protocolClick"
+      ></cc-protocolBox>
 
       <view
         v-if="userInfo.status === 'registered'"
@@ -93,9 +101,11 @@
         >
           <view
             class="popup-pick"
-            @click="() => {
-              showPattern = true
-            }"
+            @click="
+              () => {
+                showPattern = true
+              }
+            "
           >应用款式：<text>{{ patternName }}</text></view>
 
           <view class="popup-select">
@@ -254,6 +264,18 @@
       end-text="刷新"
       @change="tipsChange"
     ></u-verification-code>
+
+    <u-modal
+      v-model="show"
+      title="用户协议及隐私政策"
+    >
+      <view
+        class="slot-content"
+        style="white-space: break-spaces; height: 70vh; overflow: auto"
+      >
+        <rich-text :nodes="content"></rich-text>
+      </view>
+    </u-modal>
   </view>
 </template>
 
@@ -266,6 +288,41 @@ import { requestUtil } from '@/apis/index.js'
 export default {
   data() {
     return {
+      show: false,
+      agree: false,
+      protocolArr: [' 用户协议及隐私政策 '],
+      content: `重要提示：请务必仔细阅读 \n
+          欢迎使用由垚绅国际贸易（上海）有限公司 （以下简称“我们”）提供的“Fidelity 戒指”小程序（以下简称“本服务”）。本服务是专为在我们官方渠道购买了我们智能戒指产品的用户（以下简称“特定用户”）提供的NFC功能读写与管理工具。如果您未购买我们的智能戒指产品，将无法使用本服务。 \n
+          在您使用本服务前，请仔细阅读并充分理解以下《用户协议》和《隐私政策》。当您点击“同意”或开始使用本服务时，即表示您已阅读、理解并接受本协议的全部内容，并同意我们按照本政策收集、使用和保护您的个人信息。 \n
+一、用户协议 \n
+  1. 服务对象 \n
+      本服务仅限于已在我们店铺购买了我们智能戒指产品的特定用户使用。我们有权通过您提供的手机号等信息验证您的购买资格。非特定用户请勿注册或使用本服务。 \n
+  2. 账号注册与登录 \n
+      2.1 为验证您的用户身份并提供服务，您需要授权我们获取您的手机号码，以完成小程序登录。 \n
+      2.2 您确保您提供的手机号码是您本人所有且真实有效。我们将通过该手机号识别您是否为我们的产品用户。 \n
+  3. 服务内容 \n
+      本服务为您购买的智能戒指提供NFC数据的读取、写入及相关管理功能。所有操作均需在遵守相关法律法规的前提下进行。 \n
+  4. 免责声明 \n
+      您理解并同意，您在使用本服务对NFC数据进行操作时，应确保不侵犯他人合法权益或违反任何法律。因您不当使用本服务而产生的任何法律责任由您自行承担。 \n
+二、隐私政策 \n
+      我们高度重视您的隐私保护，并承诺严格按照本政策处理您的个人信息。 \n
+  1. 我们收集的信息 \n
+    1.1 手机号码：当您使用本小程序登录时，我们会收集您的微信绑定的手机号码。这是您使用本服务的唯一身份凭证。 \n
+  2. 我们如何使用这些信息 \n
+    2.1 唯一目的：收集您的手机号码仅用于验证您是否为我们智能戒指的购买用户，并作为您登录和使用本小程序服务的账号依据。 \n
+    2.2 我们不会将您的手机号码用于任何形式的营销、推广、用户画像分析或提供给任何第三方。 \n
+  3. 信息的存储与保护 \n
+    3.1 您的手机号码将安全地存储在我们的服务器上，并采取合理的技术措施防止信息泄露、损毁或丢失。 \n
+    3.2 除非法律强制要求，否则我们不会向任何第三方共享、转让或公开披露您的手机号码。 \n
+  4. 您的权利 \n
+      您有权查询、更正您的个人信息（手机号码）。如需操作，请通过文末联系方式与我们联系。 \n
+  5. 政策更新 \n
+      我们可能会适时更新本政策。更新后的政策会在本页面公布，敬请定期查阅。 \n
+联系我们 \n
+  如果您对本协议或隐私政策有任何疑问、意见或建议，请通过以下方式联系我们： \n
+  客服电话/微信：135 6488 7111 \n
+`,
+      // 电子邮件/店铺地址：【请填写您的电子邮箱或实体店地址】
       tips: '',
       bgList: [],
       patternList: [],
@@ -292,7 +349,7 @@ export default {
       nfcMessage: '没有NFC标签',
 
       messages: '', // 消息内容
-      background: '', // 背景 
+      background: '', // 背景
       music: '', // 音乐地址
       mode: 'text',
 
@@ -307,7 +364,7 @@ export default {
       showEdit: false,
       showBackground: false,
       showModes: false,
-      showPattern: false
+      showPattern: false,
     }
   },
   components: {
@@ -322,22 +379,25 @@ export default {
   },
   onShow() {
     this.nfcStatus = true
-    this.handleRefresh();
+    this.handleRefresh()
   },
   methods: {
+    protocolClick() {
+      this.show = true
+    },
     tipsChange(text) {
-      this.tips = text;
+      this.tips = text
     },
     getInfo() {
       if (this.$refs.uCode.canGetCode) {
         // 模拟向后端请求验证码
-        this.handleRefresh();
+        this.handleRefresh()
         setTimeout(() => {
-          uni.hideLoading();
-          this.$refs.uCode.start();
-        }, 2000);
+          uni.hideLoading()
+          this.$refs.uCode.start()
+        }, 2000)
       } else {
-        this.$u.toast('倒计时结束后再发送');
+        this.$u.toast('倒计时结束后再发送')
       }
     },
     handleRefresh() {
@@ -353,15 +413,22 @@ export default {
     async login(phone) {
       try {
         const { data } = await this.$apis.getByPhone({
-          userPhone: phone
-        });
+          userPhone: phone,
+        })
         if (data && data.id) {
           const { userName, userPhone, userStatus, id } = data
           this.userInfo = {
             id,
             name: userName,
             phone: userPhone,
-            status: userStatus === 0 ? 'unReview' : userStatus === 1 ? 'registered' : userStatus === 2 ? 'unReview' : 'unregistered'
+            status:
+              userStatus === 0
+                ? 'unReview'
+                : userStatus === 1
+                  ? 'registered'
+                  : userStatus === 2
+                    ? 'unReview'
+                    : 'unregistered',
           }
           uni.setStorageSync('userInfo', this.userInfo)
         } else {
@@ -377,11 +444,11 @@ export default {
         const { data } = await this.$apis.picList({
           pageNo: 1,
           pageSize: 999,
-          picStatus: 1
-        });
+          picStatus: 1,
+        })
         console.log('数据:', data)
         // Vue2 响应式赋值方式
-        this.$set(this, 'bgList', data.records || []);
+        this.$set(this, 'bgList', data.records || [])
       } catch (error) {
         console.log('失败:', error)
       }
@@ -391,11 +458,11 @@ export default {
         const { data } = await this.$apis.patternList({
           pageNo: 1,
           pageSize: 999,
-          patternStatus: 1
-        });
+          patternStatus: 1,
+        })
         console.log('数据:', data)
         // Vue2 响应式赋值方式
-        this.$set(this, 'patternList', data.records || []);
+        this.$set(this, 'patternList', data.records || [])
       } catch (error) {
         console.log('失败:', error)
       }
@@ -405,8 +472,8 @@ export default {
         console.log('选择的款式:', pattern[0])
         try {
           const { data } = await this.$apis.patternOne({
-            id: pattern[0].value
-          });
+            id: pattern[0].value,
+          })
           console.log('数据:', data)
           this.patternName = data.patternName
           this.editBackground = data.backgroundId
@@ -530,24 +597,25 @@ export default {
     },
 
     async onCopy() {
-      const msg = this.editMode === 'text' ? this.editMessages : this.noticeMessage
+      const msg =
+        this.editMode === 'text' ? this.editMessages : this.noticeMessage
       try {
         const { data } = await this.$apis.generateLink({
           linkContent: msg,
           mode: this.editMode,
           musicId: '',
           picId: this.editBackground,
-          userId: this.userInfo.id
-        });
+          userId: this.userInfo.id,
+        })
         console.log('数据:', data)
         uni.setClipboardData({
           data: data,
-          success: res => {
+          success: (res) => {
             wx.showToast({ title: '复制成功' })
           },
           fail: () => {
             wx.showToast({ title: '复制失败', icon: 'none' })
-          }
+          },
         })
       } catch (error) {
         console.log('失败:', error)
@@ -578,7 +646,8 @@ export default {
       //   })
       // }
 
-      const msg = this.editMode === 'text' ? this.editMessages : this.noticeMessage
+      const msg =
+        this.editMode === 'text' ? this.editMessages : this.noticeMessage
 
       console.log('editMode:', this.editMode)
       console.log('editMessages:', this.editMessages)
@@ -591,9 +660,7 @@ export default {
           tnf: 1,
           type: str2ab('U'),
           // payload: str2ab('weixin://dl/business/?appid=2088241412926203&path=pages/home/home', [
-          payload: str2ab('weixin://dl/business/?t=s7jMnEVZdtv', [
-            0,
-          ]),
+          payload: str2ab('weixin://dl/business/?t=s7jMnEVZdtv', [0]),
         },
         {
           id: str2ab('mini-android'), // 安卓小程序
@@ -665,8 +732,12 @@ export default {
 
     // 获取手机号
     async getPhoneNumber(e) {
+      if (!this.agree) {
+        this.$u.toast('请同意用户协议及隐私政策')
+        return
+      }
       try {
-        const { data } = await this.$apis.getPhone(e.detail.code);
+        const { data } = await this.$apis.getPhone(e.detail.code)
         this.userInfo.phone = data
         uni.setStorageSync('userInfo', this.userInfo)
         this.login(data)
@@ -784,7 +855,6 @@ export default {
     color: #146eff;
     cursor: pointer;
     margin-left: 4rpx;
-
   }
 }
 
@@ -951,7 +1021,7 @@ export default {
     }
 
     .button.info {
-      background: #1F7ACC;
+      background: #1f7acc;
       color: #fff;
       border: none;
       list-style: 72rpx;
@@ -1035,5 +1105,13 @@ export default {
     font-style: normal;
     text-transform: none;
   }
+}
+
+.btn-content2 {
+  position: absolute;
+  bottom: 100rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
 }
 </style>
