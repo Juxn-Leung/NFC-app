@@ -645,14 +645,20 @@ export default {
       //     },
       //   })
       // }
+      if (!this.editBackground) {
+        wx.showToast({
+          title: '请先选择背景',
+          icon: 'none',
+        })
+        return
+      }
 
-      const msg =
-        this.editMode === 'text' ? this.editMessages : this.noticeMessage
+      const msg = this.editMode === 'text' ? this.editMessages : this.noticeMessage;
 
-      console.log('editMode:', this.editMode)
-      console.log('editMessages:', this.editMessages)
-      console.log('noticeMessage:', this.noticeMessage)
-      console.log('写入的消息:', msg)
+      // console.log('editMode:', this.editMode)
+      // console.log('editMessages:', this.editMessages)
+      // console.log('noticeMessage:', this.noticeMessage)
+      // console.log('写入的消息:', msg)
 
       const records = [
         {
