@@ -110,7 +110,7 @@ export default {
 
   .view-scroll {
     width: 100%;
-    height: 70%;
+    height: auto;
     top: 50%;
     transform: translateY(-50%);
     position: absolute;

@@ -6,3 +6,5 @@ unpackage/
 wxcomponents/**/*.vue
 wxcomponents/**/*.css
 .hbuilderx/
+.vscode/
+.VSCodeCounter
