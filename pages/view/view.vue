@@ -5,6 +5,7 @@
     <scroll-view
       scroll-y="true"
       class="view-scroll"
+      :style="{ height: showMode === 'notice' ? '70%' : 'auto' }"
     >
       <rich-text
         v-if="showMode === 'text'"
@@ -110,7 +111,6 @@ export default {
 
   .view-scroll {
     width: 100%;
-    height: auto;
     top: 50%;
     transform: translateY(-50%);
     position: absolute;

@@ -477,15 +477,15 @@ export default {
           console.log('数据:', data)
           this.patternName = data.patternName
           this.editBackground = data.backgroundId
+          this.background = data.backgroundId
           if (data.patternMode === 'text') {
             this.editMessages = data.patternContent
-            this.messages = data.patternContent
-            console.log('消息内容:', this.messages)
           } else if (data.patternMode === 'notice') {
             this.noticeMessage = data.patternContent
           }
-          // this.messages = data.patternContent
+          this.messages = data.patternContent
           this.editMode = data.patternMode
+          console.log('消息内容:', this.messages)
         } catch (error) {
           console.log('失败:', error)
         }
@@ -725,6 +725,7 @@ export default {
       } else if (this.editMode === 'text') {
         this.messages = this.editMessages
       }
+      console.log('预览消息内容:', this.messages)
       this.$store.commit('content/changeMessage', this.messages)
       this.$store.commit('content/changeBackground', this.editBackground)
       this.$store.commit('content/changeMode', this.mode)
