@@ -10,21 +10,24 @@
         @touchend.stop="insertImage"
       ></i> -->
       <i
-        :class="'iconfont icon-format-header-1 ' + (formats.header === 1 ? 'ql-active' : '')"
+        :class="'iconfont ' + (formats.header === 1 ? 'ql-active' : '')"
         data-name="header"
         :data-value="1"
-      ></i>
+        style="font-size: 16px;font-weight: bold;"
+      >大</i>
       <i
-        :class="'iconfont icon-format-header-2 ' + (formats.header === 2 ? 'ql-active' : '')"
+        :class="'iconfont ' + (formats.header === 2 ? 'ql-active' : '')"
         data-name="header"
         :data-value="2"
-      ></i>
+        style="font-size: 16px;font-weight: bold;"
+      >中</i>
       <i
-        :class="'iconfont icon-format-header-3 ' + (formats.header === 3 ? 'ql-active' : '')"
+        :class="'iconfont ' + (formats.header === 3 ? 'ql-active' : '')"
         data-name="header"
         :data-value="3"
-      ></i>
-      <i
+        style="font-size: 16px;font-weight: bold;"
+      >小</i>
+      <!-- <i
         :class="'iconfont icon-format-header-4 ' + (formats.header === 4 ? 'ql-active' : '')"
         data-name="header"
         :data-value="4"
@@ -42,19 +45,19 @@
       <i
         :class="'iconfont icon-zitijiacu ' + (formats.bold ? 'ql-active' : '')"
         data-name="bold"
-      ></i>
+      ></i> -->
       <!-- <i
         :class="'iconfont icon-zitishanchuxian ' + (formats.strike ? 'ql-active' : '')"
         data-name="strike"
       ></i> -->
-      <i
+      <!-- <i
         :class="'iconfont icon-zitixieti ' + (formats.italic ? 'ql-active' : '')"
         data-name="italic"
       ></i>
       <i
         :class="'iconfont icon-zitixiahuaxian ' + (formats.underline ? 'ql-active' : '')"
         data-name="underline"
-      ></i>
+      ></i> -->
       <i
         :class="'iconfont icon-zuoduiqi ' + (formats.align === 'left' ? 'ql-active' : '')"
         data-name="align"
@@ -99,17 +102,17 @@
         class="iconfont icon-clearedformat"
         @tap="removeFormat"
       ></i> -->
-      <i
+      <!-- <i
         :class="'iconfont icon-font ' + (formats.fontFamily ? 'ql-active' : '')"
         data-name="fontFamily"
         data-value="Pacifico"
-      ></i>
+      ></i> -->
       <!-- <i
         :class="'iconfont icon-fontsize ' + (formats.fontSize === '24px' ? 'ql-active' : '')"
         data-name="fontSize"
         data-value="24px"
       ></i> -->
-      <i
+      <!-- <i
         class="iconfont icon-text_color"
         :style="'color: ' + fontColor"
         data-name="color"
@@ -122,6 +125,78 @@
         data-name="backgroundColor"
         :data-value="fontBg"
         @tap="open2"
+      ></i> -->
+      <i
+        class="iconfont color-box"
+        style="background: #000000"
+        data-name="color"
+        :data-value="'#000000'"
+      ></i>
+      <i
+        class="iconfont color-box"
+        style="background: #434343"
+        data-name="color"
+        :data-value="'#434343'"
+      ></i>
+      <i
+        class="iconfont color-box"
+        style="background: #666666"
+        data-name="color"
+        :data-value="'#666666'"
+      ></i>
+      <i
+        class="iconfont color-box"
+        style="background: #999999"
+        data-name="color"
+        :data-value="'#999999'"
+      ></i>
+      <i
+        class="iconfont color-box"
+        style="background: #FFFFFF; border: 1px solid #ccc;"
+        data-name="color"
+        :data-value="'#FFFFFF'"
+      ></i>
+      <i
+        class="iconfont color-box"
+        style="background: #FF0000"
+        data-name="color"
+        :data-value="'#FF0000'"
+      ></i>
+      <i
+        class="iconfont color-box"
+        style="background: #FF9900"
+        data-name="color"
+        :data-value="'#FF9900'"
+      ></i>
+      <i
+        class="iconfont color-box"
+        style="background: #FFFF00"
+        data-name="color"
+        :data-value="'#FFFF00'"
+      ></i>
+      <i
+        class="iconfont color-box"
+        style="background: #00FF00"
+        data-name="color"
+        :data-value="'#00FF00'"
+      ></i>
+      <i
+        class="iconfont color-box"
+        style="background: #0000FF"
+        data-name="color"
+        :data-value="'#0000FF'"
+      ></i>
+      <i
+        class="iconfont color-box"
+        style="background: #6600FF"
+        data-name="color"
+        :data-value="'#6600FF'"
+      ></i>
+      <i
+        class="iconfont color-box"
+        style="background: #800080"
+        data-name="color"
+        :data-value="'#800080'"
       ></i>
       <!-- <i
         class="iconfont icon-date"
@@ -379,7 +454,7 @@ export default {
         name,
         value
       } = e.target.dataset;
-      if (!name) return; // console.log('format', name, value)
+      if (!name) return;
       this.editorCtx.format(name, value);
     },
 
@@ -395,18 +470,18 @@ export default {
       });
     },
 
-    store(e) {
-      this.editorCtx.getContents({
-        success: function (res) {
-          uni.navigateTo({
-            url: `/pages/common/preview?rich=${encodeURIComponent(res.html)}`
-          });
-          // e.currentTarget.id == 1 ? console.log('保存内容:', res.html) : uni.navigateTo({
-          // 	url: `/pages/common/preview?rich=${encodeURIComponent(res.html)}`
-          // });
-        }
-      });
-    },
+    // store(e) {
+    //   this.editorCtx.getContents({
+    //     success: function (res) {
+    //       uni.navigateTo({
+    //         url: `/pages/common/preview?rich=${encodeURIComponent(res.html)}`
+    //       });
+    //       // e.currentTarget.id == 1 ? console.log('保存内容:', res.html) : uni.navigateTo({
+    //       // 	url: `/pages/common/preview?rich=${encodeURIComponent(res.html)}`
+    //       // });
+    //     }
+    //   });
+    // },
 
     clear() {
       this.editorCtx.clear({
@@ -452,4 +527,11 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "./assets/editor.css";
+
+.color-box {
+  width: 18px;
+  height: 18px;
+  border-radius: 2px;
+  margin: 2px 4px;
+}
 </style>

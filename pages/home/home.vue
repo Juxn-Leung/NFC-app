@@ -379,6 +379,8 @@ export default {
   },
   onShow() {
     this.nfcStatus = true
+    // this.showEdit = false
+    console.log('onShow', this.nfcStatus)
     this.handleRefresh()
   },
   methods: {
@@ -525,7 +527,7 @@ export default {
                 }
               })
 
-              if (this.messages && !this.showEdit && this.nfcStatus) {
+              if (!this.showEdit && this.nfcStatus) {
                 this.$store.commit('content/changeMessage', this.messages)
                 this.$store.commit('content/changeBackground', this.background)
                 this.$store.commit('content/changeMode', this.mode)

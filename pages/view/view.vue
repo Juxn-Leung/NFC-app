@@ -7,12 +7,12 @@
       class="view-scroll"
       :style="{ height: showMode === 'notice' ? '70%' : 'auto' }"
     >
-      <rich-text
+      <u-parse
         v-if="showMode === 'text'"
-        :nodes="showMessage"
-        class="rich-text"
-        style="white-space: pre-wrap;"
-      ></rich-text>
+        :html="showMessage"
+        :tag-style="parseStyle"
+        style="white-space: pre-wrap;word-break: break-all;"
+      ></u-parse>
       <view
         v-if="showMode === 'notice' && flag"
         class="notice-content"
@@ -23,7 +23,7 @@
           :volume-icon="false"
           :bg-color="'transparent'"
           :color="'#37342B'"
-          :font-size="isLandscape ? 100 : 50"
+          :font-size="isLandscape ? 100 : 150"
           :list="[showMessage]"
         ></u-notice-bar>
       </view>
@@ -51,6 +51,12 @@ export default {
       showMessage: '',
       showBackground: '',
       showMode: '',
+      parseStyle: {
+        'h1': 'font-size: 150rpx; font-weight: bold; margin: 10rpx 0; line-height: 1; width: 100%;display: block;',
+        'h2': 'font-size: 120rpx; font-weight: bold; margin: 10rpx 0; line-height: 1; width: 100%;display: block;',
+        'h3': 'font-size: 90rpx; font-weight: bold; margin: 10rpx 0; line-height: 1; width: 100%;display: block;',
+        'p': 'font-size: 60rpx; margin: 4rpx 0; line-height: 1.2; width: 100%;display: block;',
+      }
     }
   },
   components: {
@@ -107,7 +113,7 @@ export default {
   height: 100vh;
   position: relative;
   overflow: hidden;
-  font-family: 'PingFangJiangNanTi';
+  // font-family: 'PingFangJiangNanTi';
 
   .view-scroll {
     width: 100%;
@@ -143,5 +149,9 @@ export default {
     height: 100%;
     z-index: -1;
   }
+}
+
+h1 {
+  font-size: tovmin(80);
 }
 </style>

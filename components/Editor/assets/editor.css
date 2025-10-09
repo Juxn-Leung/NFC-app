@@ -29,8 +29,8 @@
 
 .toolbar {
 	box-sizing: border-box;
-	padding: 10px;
-	height: 130px;
+	padding: 10px 0;
+	height: auto;
 	width: 100%;
 	background: #fff;
 	right: 100%;
