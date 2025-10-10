@@ -23,7 +23,7 @@
           :volume-icon="false"
           :bg-color="'transparent'"
           :color="'#37342B'"
-          :font-size="isLandscape ? 100 : 150"
+          :font-size="70"
           :list="[showMessage]"
         ></u-notice-bar>
       </view>
@@ -77,19 +77,19 @@ export default {
       console.log('Window resized:', res);
       this.checkOrientation()
       this.flag = false;
-      this.$nextTick(() => {
+      setTimeout(() => {
         this.flag = true;
-      });
+      }, 500);
     });
   },
   methods: {
     checkOrientation() {
       const { windowWidth, windowHeight } = uni.getSystemInfoSync()
       this.isLandscape = windowWidth > windowHeight
+      console.log('Orientation:', this.isLandscape)
     },
     // 格式化图片
     formatImageUrl(id) {
-      console.log('图片ID:', id)
       if (!id) return ''
       return `${requestUtil.apiurl}/api/file/${id}` // 替换为实际的图片服务器地址
     },
