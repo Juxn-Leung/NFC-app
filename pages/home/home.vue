@@ -496,7 +496,9 @@ export default {
     },
     nfcInfo() {
       // 获取NFC实例
+      if (this.nfc && this.nfc?.tech) return
       this.nfc = wx.getNFCAdapter()
+      console.log('NFC实例:', this.nfc)
       // 绑定监听 NFC 标签
       this.nfc.onDiscovered((res) => {
         console.log('监听到NFC标签:', res)
@@ -785,6 +787,7 @@ export default {
   },
   onUnload() {
     // 停止监听 NFC 标签
+    console.log('onUnload：', '停止监听 NFC 标签')
     this.handleStopNFC()
   },
 }

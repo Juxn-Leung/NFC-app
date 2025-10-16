@@ -23,7 +23,7 @@
           :volume-icon="false"
           :bg-color="'transparent'"
           :color="'#37342B'"
-          :font-size="70"
+          :font-size="120"
           :list="[showMessage]"
         ></u-notice-bar>
       </view>
