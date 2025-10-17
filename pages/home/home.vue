@@ -496,7 +496,18 @@ export default {
     },
     nfcInfo() {
       // 获取NFC实例
-      if (this.nfc && this.nfc?.tech) return
+      if (this.nfc && this.nfc?.tech) {
+        this.nfc.stopDiscovery({
+          success: () => {
+            console.log('停止监听 NFC 标签成功')
+            this.nfc = null;
+            this.nfcInfo();
+          },
+          fail: (err) => {
+            console.log('停止监听 NFC 标签失败:', err)
+          },
+        })
+      }
       this.nfc = wx.getNFCAdapter()
       console.log('NFC实例:', this.nfc)
       // 绑定监听 NFC 标签
