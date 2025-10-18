@@ -382,6 +382,7 @@ export default {
     // this.showEdit = false
     console.log('onShow', this.nfcStatus)
     this.handleRefresh()
+    // this.nfcInfo()
   },
   methods: {
     protocolClick() {
@@ -507,6 +508,8 @@ export default {
             console.log('停止监听 NFC 标签失败:', err)
           },
         })
+        this.nfc = null;
+        return
       }
       this.nfc = wx.getNFCAdapter()
       console.log('NFC实例:', this.nfc)
@@ -539,7 +542,8 @@ export default {
                   this.mode = parsedRecord.payload
                 }
               })
-
+              console.log('this.showEdit:', this.showEdit)
+              console.log('this.nfcStatus:', this.nfcStatus)
               if (!this.showEdit && this.nfcStatus) {
                 this.$store.commit('content/changeMessage', this.messages)
                 this.$store.commit('content/changeBackground', this.background)
@@ -549,6 +553,10 @@ export default {
                   success: () => {
                     this.nfcStatus = false
                   },
+                  error: (err) => {
+                    console.log('导航失败:', err)
+                    this.nfcStatus = true;
+                  }
                 })
               }
             }
