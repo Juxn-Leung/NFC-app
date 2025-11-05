@@ -544,7 +544,11 @@ export default {
               })
               console.log('this.showEdit:', this.showEdit)
               console.log('this.nfcStatus:', this.nfcStatus)
-              if (!this.showEdit && this.nfcStatus) {
+              const pages = getCurrentPages();
+              const currentPage = pages[pages.length - 1];
+              const currentRoute = currentPage.route;
+              console.log('当前页面路由:', currentRoute);
+              if (!this.showEdit && currentRoute === 'pages/home/home') {
                 this.$store.commit('content/changeMessage', this.messages)
                 this.$store.commit('content/changeBackground', this.background)
                 this.$store.commit('content/changeMode', this.mode)
